@@ -10,7 +10,7 @@
     "github": "https://github.com/itzsudipta/NIRIKSHA-Ai-Powered-TOF-Drone-System",
     "live": "",
     "featured": true,
-    "image": ""
+    "image": "/images/projects/Niriksha.png"
   },
   {
     "id": "filetracker",
@@ -20,7 +20,7 @@
     "detail": "The file-management dashboard brings uploads, search, tags, and file details into one view.",
     "tags": ["React", "TypeScript"],
     "art": "database",
-    "github": "",
+    "github": "https://github.com/itzsudipta/FileTracker",
     "live": "",
     "featured": true,
     "image": ""
@@ -36,32 +36,6 @@
     "live": "",
     "detail": "Semantic search selects a product image and metadata. Gemma drafts a design description and Swin2SR enlarges the visual reference.",
     "featured": true,
-    "image": ""
-  },
-  {
-    "id": "gitrag",
-    "name": "GitRAG",
-    "kind": "AI / RETRIEVAL",
-    "description": "Ask questions about a codebase using its Git commit history.",
-    "tags": ["Python", "FAISS", "Gemma"],
-    "art": "graph",
-    "github": "",
-    "live": "",
-    "detail": "GitPython reads commits into SQLite. MiniLM embeddings and FAISS retrieve relevant changes for Gemma to explain.",
-    "featured": false,
-    "image": ""
-  },
-  {
-    "id": "bankingenterprise",
-    "name": "BankingEnterprise",
-    "kind": "BACKEND / JAVA",
-    "description": "Customer management APIs built with Spring Boot and PostgreSQL.",
-    "tags": ["Java", "Spring Boot", "PostgreSQL"],
-    "art": "database",
-    "github": "",
-    "live": "",
-    "detail": "The customer management module models personal records and addresses with Spring Data JPA and PostgreSQL.",
-    "featured": false,
-    "image": ""
+    "image": "/images/projects/fabricanova.png"
   }
 ]

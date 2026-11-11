@@ -16,7 +16,7 @@ export function Contact() {
       </h1>
       <p>
         Send me a message about a project, research collaboration, or
-        opportunity. Email delivery is handled by FormSubmit.
+        opportunity.
       </p>
       <form
         className="contact"
@@ -80,14 +80,14 @@ export function Contact() {
         <output aria-live="polite">{note}</output>
       </form>
       <ProfileContacts />
-      <a
+      {/* <a
         className="textaction"
         href={d.website}
         target="_blank"
         rel="noreferrer"
       >
         Personal website
-      </a>
+      </a> */}
     </>
   );
 }
