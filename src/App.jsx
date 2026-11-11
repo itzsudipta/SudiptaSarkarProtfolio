@@ -17,8 +17,10 @@ import { download, cv } from "./utils/downloads";
 import { TitleBar } from "./layouts/TitleBar";
 import { Toolbar } from "./layouts/Toolbar";
 import { StatusBar } from "./layouts/StatusBar";
-import { Home } from "./pages/Home";
+// import { Home } from "./pages/Home";
 import { Profile } from "./pages/Profile";
+import { Academics } from "./pages/Academics";
+import { Experience } from "./pages/Experience";
 import { Projects } from "./pages/Projects";
 import { Research } from "./pages/Research";
 import { Certificates } from "./pages/Certificates";
@@ -63,6 +65,7 @@ export default function App() {
     }
   };
   const open = (id) => {
+    if (id === "home" || !ids.includes(id)) return;
     setTabs((t) => (t.includes(id) ? t : [...t, id]));
     setActive(id);
     setClosed((previous) => previous.filter((file) => file !== id));
@@ -93,10 +96,11 @@ export default function App() {
   };
   const maximize = () =>
     setWindow(windowState === "maximized" ? "normal" : "maximized");
-  const inspect = (p) => {
-    setProject(p);
-    setModal("detail");
-  };
+  const inspect = (project) => {
+  if (project.github) {
+    window.open(project.github, "_blank", "noopener,noreferrer");
+  }
+};
   const currentContent = () =>
     scroll.current?.querySelector(".fileview:not([hidden])");
   const selectContent = () => {
@@ -220,8 +224,10 @@ export default function App() {
     ["Bookmarks", Bookmark],
   ];
   const page = {
-    home: <Home catalog={projects} open={open} inspect={inspect} />,
+    // home: <Home catalog={projects} open={open} inspect={inspect} />,
     profile: <Profile open={open} />,
+    academics: <Academics />,
+    experience: <Experience />,
     projects: <Projects catalog={projects} inspect={inspect} />,
     research: <Research />,
     certificates: <Certificates />,
@@ -374,13 +380,7 @@ export default function App() {
                   ))}
                 </div>
               )}
-              <div
-                className={
-                  !active
-                    ? "empty-editor"
-                    : "content " + (active === "home" ? "home" : "innerpage")
-                }
-              >
+              <div className={active ? "content innerpage" : "empty-editor"}>
                 {tabs.map((id) => (
                   <div className="fileview" key={id} hidden={active !== id}>
                     <ErrorBoundary scope={filename(id)}>

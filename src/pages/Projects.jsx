@@ -1,7 +1,56 @@
 import React, { useState } from "react";
+import { ArrowUpRight } from "lucide-react";
 import { CatalogStatus } from "../components/CatalogStatus";
-import { ProjectCard } from "../components/ProjectCard";
+import { TechIcon } from "../components/TechIcon";
 
+function ProjectGallery({ project }) {
+  const [expanded, setExpanded] = useState(false);
+  const previewLimit = 3;
+
+  const images = project.tableImages?.length
+    ? project.tableImages
+    : project.tableImage
+      ? [{ src: project.tableImage, alt: project.tableImageAlt }]
+      : [];
+
+  if (images.length === 0) return null;
+
+  const hiddenCount = Math.max(0, images.length - previewLimit);
+  const visibleImages = expanded ? images : images.slice(0, previewLimit);
+  const galleryId = `project-gallery-${project.id}`;
+
+  return (
+    <div className="projects-table-photos">
+      <div id={galleryId} className="projects-table-gallery">
+        {visibleImages.map((image, index) => (
+          <img
+            key={image.src}
+            src={image.src}
+            alt={image.alt || `${project.name} screenshot ${index + 1}`}
+            loading="lazy"
+          />
+        ))}
+      </div>
+
+      {hiddenCount > 0 && (
+        <button
+          type="button"
+          className="projects-table-gallery-toggle"
+          aria-controls={galleryId}
+          aria-expanded={expanded}
+          aria-label={
+            expanded
+              ? `Show fewer pictures for ${project.name}`
+              : `Show ${hiddenCount} more pictures for ${project.name}`
+          }
+          onClick={() => setExpanded((previous) => !previous)}
+        >
+          {expanded ? "Show less" : `+${hiddenCount} more`}
+        </button>
+      )}
+    </div>
+  );
+}
 export function Projects({ inspect, catalog }) {
   const [tag, set] = useState("All");
   return (
@@ -23,13 +72,63 @@ export function Projects({ inspect, catalog }) {
           </button>
         ))}
       </div>
-      <div className="cards">
-        {catalog.items
-          .filter((p) => tag === "All" || p.tags.includes(tag))
-          .map((p) => (
-            <ProjectCard key={p.id} p={p} inspect={inspect} />
-          ))}
-      </div>
+      {catalog.items.length > 0 && (
+  <table className="projects-table" aria-label="Projects">
+    <thead>
+      <tr>
+        <th scope="col">Project name</th>
+        <th scope="col">Description & tech stack</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {catalog.items
+        .filter((p) => tag === "All" || p.tags.includes(tag))
+        .map((p) => (
+          <tr key={p.id}>
+            <th scope="row">
+              <button
+                type="button"
+                className="projects-table-name"
+                onClick={() => inspect(p)}
+              >
+                {p.name}
+              </button>
+            </th>
+
+            <td>
+              <p>{p.description}</p>
+
+              {p.live && (
+                <a
+                  className="textaction projects-table-live"
+                  href={p.live}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Visit ${p.name} live site (opens in a new tab)`}
+                >
+                  <span>Live site</span>
+                  <ArrowUpRight size={15} aria-hidden="true" />
+                </a>
+              )}
+
+              {p.tags.length > 0 && (
+                <ul className="projects-table-stack" aria-label="Tech stack">
+                  {p.tags.map((tech) => (
+                    <li key={tech}>
+                      <TechIcon name={tech} caption />
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <ProjectGallery project={p} />
+            </td>
+          </tr>
+        ))}
+    </tbody>
+  </table>
+)}
     </>
   );
 }

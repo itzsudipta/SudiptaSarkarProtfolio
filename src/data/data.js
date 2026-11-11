@@ -6,7 +6,7 @@ export const portfolio = {
   location: "Kolkata, India",
   intro:
     "I build Java backend systems and AI applications that turn complex data into useful tools.",
-  bio: "I’m a Computer Science Engineer from Narula Institute of Technology, Kolkata, with a strong foundation in software development and a keen interest in academic research. My work centers on designing and building scalable, maintainable backend systems using Python, complemented by clean frontend implementations to deliver complete web applications. I have practical experience deploying and managing these applications on AWS, with a focus on reliability and scalability.\n\nIn parallel with development work, I actively pursue research in Computer Vision and Deep Learning, with particular interest in translating emerging AI methodologies into applied solutions. My research experience includes work on Diffusion Models, with applications explored in Fashion Engineering and AI-driven fashion design. I have also authored a patent journal on UAV and LiDAR sensor technology integrated with Computer Vision.",
+  bio: "I’m a Computer Science Engineer from Narula Institute of Technology, Kolkata, with a strong foundation in software development and a keen interest in academic research. My work centers on designing and building scalable, maintainable backend systems using Java, complemented by clean frontend implementations to deliver complete backend architecture. I have practical experience deploying and managing these applications on AWS, with a focus on reliability and scalability.\n\nIn parallel with development work, I actively pursue research in Computer Vision and Deep Learning, with particular interest in translating emerging AI methodologies into applied solutions. My research experience includes work on Diffusion Models, with applications explored in Fashion Engineering and AI-driven fashion design. I have also authored a patent journal on UAV and LiDAR sensor technology integrated with Computer Vision.",
   education:
     "B.Tech in Computer Science & Technology · Narula Institute of Technology, Kolkata · Class of 2026",
   techGroups: [
@@ -27,21 +27,28 @@ export const portfolio = {
       "Machine Learning & AI",
       ["YOLOv8", "OpenCV", "Scikit-learn", "NumPy", "Pandas", "Matplotlib"],
     ],
-    ["Database Management", ["PostgreSQL", "MySQL", "SQLite"]],
+    ["Database Management", ["PostgreSQL", "MySQL"]],
     ["Cloud & Platforms", ["AWS", "Docker", "Git", "GitHub", "Postman"]],
   ],
   academicJourney: [
     [
-      "Class of 2026",
-      "B.Tech · Computer Science & Technology",
-      "Narula Institute of Technology, Kolkata",
+      "Sep 2023 – Jun 2026",
+      "Bachelor of Technology (B.Tech) · Computer Science & Information Technology",
+      "Narula Institute of Technology (NiT)",
+      "Grade: 8.52\n\nActivities and societies:\n• Researched Diffusion Models for applications in Fashion Engineering.\n• Led the college project team as Team Lead, managing collaboration and project execution.\n• Participated in the Hack-O-NiT 2026 Inter-College Hackathon.\n• Served on the Management Team for the College Farewell, coordinating event operations.",
     ],
     [
-      "2020–2023",
-      "Diploma · Computer Science & Technology",
-      "BPC Institute of Technology",
+      "Dec 2020 – Jun 2023",
+      "Diploma in Computer Science and Technology · Computer Science and Information Technology",
+      "BPC Institute of Technology (Govt.)",
+      "Grade: Distinction [I] · OGPA: 8.3\n\nActivities and societies:\n• Attended the Science and Science Conference (2022) on Artificial Intelligence vs. Natural Intelligence.",
     ],
-    ["School", "School education", "Chakdaha Ramlal Academy"],
+    [
+      "Mar 2019 – Apr 2021",
+      "Higher Secondary · Art/Art Studies, General",
+      "Chakdaha Ramlal Academy",
+      "Grade: B+\n\nActivities and societies:\n• Participated in the Inter-School Science Fair (2017), demonstrating interest in science and innovation.\n• Participated in the National Olympiad in Computer and English, showcasing analytical and problem-solving skills.",
+    ],
   ],
   building:
     "I’m currently working on Java backend development and researching machine learning applications in disaster management.",
@@ -81,8 +88,10 @@ export const portfolio = {
   photoUrl:
     "/images/profile/SudiptaSarkar.png",
   files: {
-    home: "home.tsx",
+    // home: "home.tsx",
     profile: "profile.ts",
+    academics: "academics.ts",
+    experience: "experience.ts",
     projects: "projects/projects.ts",
     research: "research/notes.md",
     certificates: "Achievements.md",
@@ -107,8 +116,8 @@ export const portfolio = {
         "AI-Driven Victim Detection Using ToF Sensor Data in Multi-Sensor UAVs",
       details: "Published Application",
       linkLabel: "View Patent",
-      url: "https://patents.google.com/?q=AI-Driven%20Victim%20Detection%20Using%20ToF%20Sensor%20Data%20in%20Multi-Sensor%20UAVs",
-      demo: true,
+      url: "https://drive.google.com/file/d/1DiMry3BJEAi0ZBCadyPuSsucYeeXf_HJ/view?usp=drive_link",
+      demo: false,
     },
     {
       id: "patent-uav",
@@ -118,7 +127,7 @@ export const portfolio = {
       details: "Published Application",
       linkLabel: "View Patent",
       url: "https://patents.google.com/?q=UAVs%20Integrated%20with%20AI%20Accelerator%20for%20Real-Time%20Delay-Tolerant%20Intelligence%20System%20in%20Disaster%20Management",
-      demo: true,
+      demo: false,
     },
   ],
 };

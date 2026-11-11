@@ -60,8 +60,10 @@ export function Panel({ panel, active, open, marks, bookmark, hide }) {
       {panel === "Project" ? (
         <FolderRow name="portfolio">
           <FolderRow name="src">
-            {file("home")}
+            {/* {file("home")} */}
             {file("profile")}
+            {file("academics")}
+            {file("experience")}
             <FolderRow start={false} name="projects">
               {file("projects")}
             </FolderRow>

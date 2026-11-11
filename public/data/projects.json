@@ -3,39 +3,92 @@
     "id": "niriksha",
     "name": "Niriksha",
     "kind": "AI / DRONE PERCEPTION",
-    "description": "Real-time object detection for time-of-flight drones.",
-    "detail": "Built by HalfBaked Engineers for Hack-o-NiT, Niriksha combines YOLOv8 predictions through ensemble learning. The team reports 84% accuracy in testing. A Flask API serves predictions to a web interface. The system is under active development as part of patent-related research.",
-    "tags": ["YOLOv8", "Python", "Flask"],
+    "description": "The AI-Powered TOF Drone System is a cutting-edge research and development project focused on enhancing drone perception and analytics. Leveraging advanced computer vision models like YOLOv8 combined with Ensemble Learning, this system pushes the boundaries of object detection and spatial awareness.",
+    "tags": ["HTML5","CSS3","YOLOv8", "Python", "Flask"],
     "art": "graph",
     "github": "https://github.com/itzsudipta/NIRIKSHA-Ai-Powered-TOF-Drone-System",
     "live": "",
     "featured": true,
-    "image": "/images/projects/Niriksha.png"
+    "image": "/images/projects/Niriksha.png",
+    "tableImages": [
+      {
+        "src": "/images/projects/Niriksha.png",
+        "alt": "Niriksha project preview"
+      },
+      {
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_.png",
+        "alt": "Niriksha screenshot 1"
+      },
+      {
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(1).png",
+        "alt": "Niriksha screenshot 2"
+      },
+      {
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(2).png",
+        "alt": "Niriksha screenshot 3"
+      },
+      {
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(3).png",
+        "alt": "Niriksha screenshot 4"
+      }
+    ]
   },
   {
     "id": "filetracker",
     "name": "FileTracker",
     "kind": "FILE MANAGEMENT",
-    "description": "A workspace for uploading, finding, and organizing files.",
+    "description": "FileTracker is a modern file management web app with a FastAPI backend and a React + Vite frontend. It supports secure authentication, file upload, download, and organization for users and organizations.",
     "detail": "The file-management dashboard brings uploads, search, tags, and file details into one view.",
-    "tags": ["React", "TypeScript"],
+    "tags": ["React", "TypeScript" , "Python" , "AWS"] ,
     "art": "database",
     "github": "https://github.com/itzsudipta/FileTracker",
     "live": "",
     "featured": true,
-    "image": ""
+    "image": "/images/projects/fileTracker/image.png",
+    "tableImages": [
+      {
+        "src": "/images/projects/fileTracker/image.png",
+        "alt": "FileTracker project preview"
+      }
+    ]
   },
   {
     "id": "fabricanova",
     "name": "Fabricanova",
     "kind": "AI / FASHION",
-    "description": "A retrieval-powered design assistant for fashion exploration.",
-    "tags": ["Python", "RAG", "Swin2SR"],
+    "description": "Fabricanova is an AI-powered platform for fashion designers, blending generative AI, technical sketching, and collaborative tools. Built with Next.js, React, and Python, it enables users to create, visualize, and iterate on garment designs from concept to technical vector sketches.",
+    "tags": ["Next.js" , "Python" , "Supabase"],
     "art": "fabric",
     "github": "",
-    "live": "",
+    "live": "http://localhost:5174/",
     "detail": "Semantic search selects a product image and metadata. Gemma drafts a design description and Swin2SR enlarges the visual reference.",
     "featured": true,
-    "image": "/images/projects/fabricanova.png"
+    "image": "/images/projects/fabricanova/fabricanova.png",
+    "tableImages": [
+      {
+        "src": "/images/projects/fabricanova/fabricanova.png",
+        "alt": "Fabricanova project preview"
+      },
+      {
+        "src": "/images/projects/fabricanova/Screenshot%202026-01-11%20162552.png",
+        "alt": "Fabricanova screenshot 1"
+      },
+      {
+        "src": "/images/projects/fabricanova/Screenshot%202026-01-11%20221650.png",
+        "alt": "Fabricanova screenshot 2"
+      },
+      {
+        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175647.png",
+        "alt": "Fabricanova screenshot 3"
+      },
+      {
+        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175708.png",
+        "alt": "Fabricanova screenshot 4"
+      },
+      {
+        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175748.png",
+        "alt": "Fabricanova screenshot 5"
+      }
+    ]
   }
 ]

@@ -12,7 +12,7 @@ export function Certificates() {
     <section className="certificate-section">
       <div className="comment">// achievements.md</div>
       <h1 className="pagetitle">
-        Certificates<b>.</b>
+        Achievements<b>.</b>
       </h1>
       <CatalogStatus catalog={catalog} />
       {!catalog.loading && !catalog.error && records.length === 0 && (

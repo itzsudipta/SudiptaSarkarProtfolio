@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Menu, Search, Sun, Moon } from "lucide-react";
 // import { Minus, Square, X, Copy } from "lucide-react";
 import { IconButton } from "../components/IconButton";
+import { portfolio } from "../data/data";
 
 export function TitleBar({ menus, setWindow, windowState, maximize, search, theme, light }) {
   const bar = useRef(null);
@@ -32,7 +33,7 @@ export function TitleBar({ menus, setWindow, windowState, maximize, search, them
     <header className="titlebar" ref={bar}>
       <div className="brand">
         <span className="brandmark">&gt;_</span>
-        <b>Portfolio IDE</b>
+        <b className="brand-name">{portfolio.name}</b>
       </div>
       <button
         className="mobilemenu"

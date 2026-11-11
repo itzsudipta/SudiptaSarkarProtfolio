@@ -2032,3 +2032,158 @@ footer .developer-credit {
   .title-actions .icon,.title-actions .searchbtn {width:36px;height:36px;min-height:36px;justify-content:center}
   .toolbar .run span,.toolbar .gh span {display:inline}
 }
+
+.projects-table {
+  --project-photo-width: 38%;
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+.projects-table th,
+.projects-table td {
+  padding: clamp(8px, 1.5vw, 18px);
+  border: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.projects-table thead th {
+  background: var(--panel);
+  font-weight: 600;
+}
+
+.projects-table thead th:first-child {
+  width: 30%;
+}
+
+.projects-table-name {
+  max-width: 100%;
+  padding: 0;
+  color: var(--green);
+  font: inherit;
+  text-align: left;
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.projects-table-name:hover {
+  text-decoration: underline;
+}
+
+.projects-table td p {
+  margin: 0;
+}
+
+.projects-table-live {
+  max-width: 100%;
+  min-height: 44px;
+  margin-top: 4px;
+  white-space: normal;
+}
+
+.projects-table-live svg {
+  flex-shrink: 0;
+}
+
+.projects-table-live:hover {
+  text-decoration: underline;
+}
+
+/* Tech stack */
+.projects-table-stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.projects-table-stack .tech-mark.labeled {
+  flex-direction: row;
+  min-width: 0;
+  gap: 6px;
+  padding: 0;
+}
+
+.projects-table-stack .tech-mark :is(img, svg) {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* Space below the tech stack for a gallery or a single picture. */
+.projects-table-photos,
+.projects-table td>.projects-table-image {
+  margin-top: 16px;
+}
+
+.projects-table-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Apply the same dimensions to standalone and gallery pictures. */
+.projects-table img.projects-table-image,
+.projects-table .projects-table-gallery>img {
+  display: block;
+  flex: none;
+  width: var(--project-photo-width);
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* +N more / Show less */
+.projects-table-gallery-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 100%;
+  min-height: 36px;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--green);
+  font: inherit;
+  cursor: pointer;
+}
+
+.projects-table-gallery-toggle:hover {
+  border-color: var(--green);
+}
+
+.projects-table-name:focus-visible,
+.projects-table-live:focus-visible,
+.projects-table-gallery-toggle:focus-visible {
+  outline: 2px solid var(--green);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .projects-table {
+    --project-photo-width: 45%;
+  }
+
+  .projects-table-gallery-toggle {
+    min-height: 44px;
+  }
+}
+
+
+.titlebar .brand {
+  min-width: 0;
+}
+
+.titlebar .brand-name {
+  font-size: clamp(12px, 2vw, 13px);
+  white-space: nowrap;
+}

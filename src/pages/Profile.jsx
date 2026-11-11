@@ -52,30 +52,8 @@ export function Profile({ open }) {
         </button>
       </section>
       <section className="profile-section">
-        <h2>Academic journey</h2>
-        <ol className="journey">
-          {d.academicJourney.map(([year, course, place]) => (
-            <li key={place}>
-              <small>{year}</small>
-              <h3>{course}</h3>
-              <p>{place}</p>
-            </li>
-          ))}
-        </ol>
-      </section>
-      <section className="profile-section">
         <h2>What I’m building now</h2>
         <p>{d.building}</p>
-      </section>
-      <section className="profile-section">
-        <h2>Experience</h2>
-        {d.experience.map(([year, title, desc]) => (
-          <article className="summaryrow" key={title}>
-            <small>{year}</small>
-            <h3>{title}</h3>
-            <p>{desc}</p>
-          </article>
-        ))}
       </section>
       <ProfileContacts />
     </div>
