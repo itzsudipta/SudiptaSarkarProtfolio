@@ -1428,26 +1428,45 @@ dialog::backdrop {
   padding: 8px 0;
 }
 .journey {
-  border-left: 1px solid var(--plotdot);
-  margin-left: 4px;
-  padding-left: 22px;
+  --marker-x: 4px;
+  --marker-y: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
-.journey li {
+
+.journey>li {
   position: relative;
-  padding: 0 0 18px;
+  padding-inline-start: clamp(1.25rem, 3vw, 1.75rem);
+  overflow-wrap: anywhere;
 }
-.journey li:last-child {
-  padding-bottom: 0;
+
+.journey>li:not(:last-child) {
+  padding-bottom: 1.125rem;
 }
-.journey li:before {
+
+/* Connect this dot's center to the next dot's center. */
+.journey>li:not(:last-child)::before {
   content: "";
   position: absolute;
-  left: -26px;
-  top: 5px;
-  background: var(--green);
-  width: 7px;
-  height: 7px;
+  left: var(--marker-x);
+  top: var(--marker-y);
+  width: 2px;
+  height: 100%;
+  transform: translateX(-50%);
+  background: var(--plotdot);
+}
+
+.journey>li::after {
+  content: "";
+  position: absolute;
+  left: var(--marker-x);
+  top: var(--marker-y);
+  width: 8px;
+  height: 8px;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
+  background: var(--green);
 }
 .research-head {
   padding-bottom: 25px;

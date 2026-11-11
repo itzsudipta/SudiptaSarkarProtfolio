@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { Camera, ImagePlus, Trash2 } from "lucide-react";
 import { portfolio } from "../data/data";
 
 const key = "portfolio-portrait";
