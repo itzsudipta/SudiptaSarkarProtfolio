@@ -85,7 +85,7 @@ export const portfolio = {
     profile: "profile.ts",
     projects: "projects/projects.ts",
     research: "research/notes.md",
-    certificates: "certificates.md",
+    certificates: "Achievements.md",
     contact: "contact.md",
   },
   research: [

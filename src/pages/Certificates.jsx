@@ -10,7 +10,7 @@ export function Certificates() {
   const records = getCertificates(catalog.items);
   return (
     <section className="certificate-section">
-      <div className="comment">// certificates.md</div>
+      <div className="comment">// achievements.md</div>
       <h1 className="pagetitle">
         Certificates<b>.</b>
       </h1>

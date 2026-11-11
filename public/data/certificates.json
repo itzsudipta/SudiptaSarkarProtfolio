@@ -1,42 +1,51 @@
 [
   {
-    "id": "internet-of-things",
-    "title": "Internet of Things",
+    "id": "iot",
+    "title": "Introduction to Internet of Things",
     "demoImage": "/images/certificates/iot.svg",
-    "image": "",
+    "image": "/images/certificates/iot.jpg",
     "description": "Explores how sensors collect measurements and connected devices exchange data. This foundation informs my interest in drone sensing and smart farming.",
     "issuer": "NPTEL",
     "institution": "IIT Kharagpur",
-    "url": ""
+    "url": "/files/certificates/SUDIPTA_NPTEL_RESULT-IOT_CERTIFICATE.pdf"
   },
   {
     "id": "fundamentals-of-ai",
-    "title": "Fundamentals of AI",
+    "title": "Fundamentals of Artificial Intelligence",
     "demoImage": "/images/certificates/ai.svg",
-    "image": "",
-    "description": "Covers how an AI system represents a problem, searches for a solution, and learns from examples. I use these concepts when comparing model predictions.",
+    "image": "/images/certificates/ai.jpg",
+    "description": "Completed the 12-week NPTEL course in Fundamentals of Artificial Intelligence from July to October 2024, earning Elite certification with a score of 66%.",
     "issuer": "NPTEL",
     "institution": "IIT Guwahati",
-    "url": ""
+    "url": "/files/certificates/SUDIPTA_AI_NPTEL_CERTIFICATE.pdf"
   },
   {
     "id": "database",
-    "title": "Database",
+    "title": "Data Base Management System",
     "demoImage": "/images/certificates/database.svg",
-    "image": "",
+    "image": "/images/certificates/database.jpg",
     "description": "Focuses on relational data, SQL, and the relationships between tables. I apply these ideas when designing PostgreSQL schemas for backend services.",
     "issuer": "NPTEL",
     "institution": "IIT Kharagpur",
-    "url": ""
+    "url": "/files/certificates/SUDIPTA-DBMS-CERTIFICATE(NPTEL).pdf"
   },
   {
     "id": "full-stack-development",
     "title": "Full-Stack Development",
     "demoImage": "/images/certificates/full-stack.svg",
-    "image": "",
+    "image": "/images/certificates/full-stack.jpg",
     "description": "Connects frontend development with backend APIs and persistent storage. This training helped me build interfaces that work with real application data.",
-    "issuer": "BCT",
+    "issuer": "Euphoria GenX",
     "institution": "Narula Institute of Technology",
-    "url": ""
+    "url": "/files/certificates/Sudipta_Sarkar.pdf"
+  },
+  {
+    "id": "ardent-iot",
+    "title": "Internet of Things - Smart Home Automation",
+    "image": "/images/certificates/ardent-iot.jpg",
+    "description": "Completed 30 hours of Internet of Things training with a project on smart home automation using IoT, held from 5 to 10 February 2024.",
+    "issuer": "Ardent",
+    "institution": "Narula Institute of Technology",
+    "url": "/files/certificates/SUDIPTA_CERTIFICATE_ARDENT_IOT.pdf"
   }
 ]
