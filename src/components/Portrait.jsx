@@ -72,7 +72,6 @@ export function Portrait() {
               .join("")}
           </span>
         )}
-        <Camera size={15} />
       </div>
     </figure>
   );

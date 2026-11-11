@@ -79,7 +79,7 @@ export const portfolio = {
   email: "info.sudipta127001@gmail.com",
   cvUrl: "",
   photoUrl:
-    "https://raw.githubusercontent.com/itzsudipta/NIRIKSHA-Ai-Powered-TOF-Drone-System/main/Frontend/pr3.jpeg",
+    "/images/profile/SudiptaSarkar.png",
   files: {
     home: "home.tsx",
     profile: "profile.ts",
