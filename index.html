@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111416" />
+    <title>Sudipta Sarkar | Portfolio IDE</title>
+    <style>
+      html {
+        color-scheme: dark;
+        background: #121516;
+      }
+      html[data-theme="light"] {
+        color-scheme: light;
+        background: #fbfcfa;
+      }
+    </style>
+    <script>
+      try {
+        document.documentElement.dataset.theme =
+          localStorage.getItem("ide-theme") === "light" ? "light" : "dark";
+      } catch (error) {
+        console.warn(
+          "[Portfolio] Theme preference unavailable; using dark mode.",
+          error,
+        );
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

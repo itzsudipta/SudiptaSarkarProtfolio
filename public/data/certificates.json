@@ -1,0 +1,42 @@
+[
+  {
+    "id": "internet-of-things",
+    "title": "Internet of Things",
+    "demoImage": "/images/certificates/iot.svg",
+    "image": "",
+    "description": "Explores how sensors collect measurements and connected devices exchange data. This foundation informs my interest in drone sensing and smart farming.",
+    "issuer": "NPTEL",
+    "institution": "IIT Kharagpur",
+    "url": ""
+  },
+  {
+    "id": "fundamentals-of-ai",
+    "title": "Fundamentals of AI",
+    "demoImage": "/images/certificates/ai.svg",
+    "image": "",
+    "description": "Covers how an AI system represents a problem, searches for a solution, and learns from examples. I use these concepts when comparing model predictions.",
+    "issuer": "NPTEL",
+    "institution": "IIT Guwahati",
+    "url": ""
+  },
+  {
+    "id": "database",
+    "title": "Database",
+    "demoImage": "/images/certificates/database.svg",
+    "image": "",
+    "description": "Focuses on relational data, SQL, and the relationships between tables. I apply these ideas when designing PostgreSQL schemas for backend services.",
+    "issuer": "NPTEL",
+    "institution": "IIT Kharagpur",
+    "url": ""
+  },
+  {
+    "id": "full-stack-development",
+    "title": "Full-Stack Development",
+    "demoImage": "/images/certificates/full-stack.svg",
+    "image": "",
+    "description": "Connects frontend development with backend APIs and persistent storage. This training helped me build interfaces that work with real application data.",
+    "issuer": "BCT",
+    "institution": "Narula Institute of Technology",
+    "url": ""
+  }
+]

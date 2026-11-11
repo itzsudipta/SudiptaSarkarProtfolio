@@ -1,0 +1,44 @@
+.blog-page {
+  max-width: 1200px;
+  margin-inline: auto;
+  color: var(--text);
+}
+.blog-search {
+  max-width: 32rem;
+  margin-bottom: 1.25rem;
+}
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+.blog-grid article {
+  padding: 1.25rem;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  overflow-wrap: anywhere;
+}
+.blog-grid h2 {
+  font-size: 1.2rem;
+  line-height: 1.35;
+  font-weight: 600;
+  margin: 0.65rem 0;
+}
+.blog-grid small,
+.blog-grid p,
+.blog-page [role="status"] {
+  color: var(--muted);
+}
+.blog-grid p {
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin: 0.5rem 0 1rem;
+}
+.blog-grid summary {
+  cursor: pointer;
+  color: var(--green);
+  padding: 0.6rem 0;
+  font-size: 0.85rem;
+}

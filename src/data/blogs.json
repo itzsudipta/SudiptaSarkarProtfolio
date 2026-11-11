@@ -1,0 +1,35 @@
+[
+  {
+    "id": "git-history",
+    "title": "Searching Git History by Meaning",
+    "slug": "searching-git-history-by-meaning",
+    "date": "2026-11-10",
+    "author": "Sudipta Sarkar",
+    "summary": "How a retrieval pipeline can answer questions about changes across commits.",
+    "content": "A commit hash is a good address, but it is hard to remember when you want to find the change that introduced a feature. A useful search record pairs each commit message with its hash and the files it changed.\n\nIn GitRAG, semantic search retrieves relevant commits before a language model explains the changes. Keeping the hashes in the answer gives the reader a direct way to inspect the original evidence.",
+    "tags": ["Git", "RAG"],
+    "published": true
+  },
+  {
+    "id": "customer-addresses",
+    "title": "Modeling Customer Addresses in Spring",
+    "slug": "modeling-customer-addresses-in-spring",
+    "date": "2026-11-09",
+    "author": "Sudipta Sarkar",
+    "summary": "A small data-modeling example for a customer with multiple addresses.",
+    "content": "A customer can have a home address and a mailing address. Keeping addresses in their own table lets each row describe one location and reference the customer who owns it.\n\nIn a Spring application, that relationship can be represented by an address entity with a many-to-one customer field. A service can then update one address while preserving the customer's other locations.",
+    "tags": ["Java", "Spring", "PostgreSQL"],
+    "published": true
+  },
+  {
+    "id": "drone-notes",
+    "title": "Notes on Drone Perception",
+    "slug": "notes-on-drone-perception",
+    "date": "2026-11-08",
+    "author": "Sudipta Sarkar",
+    "summary": "A draft outline for a future research note.",
+    "content": "Draft outline: sensing conditions, detection errors, and evaluation.",
+    "tags": ["Computer Vision"],
+    "published": false
+  }
+]
