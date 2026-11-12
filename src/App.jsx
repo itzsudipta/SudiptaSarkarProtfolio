@@ -97,10 +97,9 @@ export default function App() {
   const maximize = () =>
     setWindow(windowState === "maximized" ? "normal" : "maximized");
   const inspect = (project) => {
-  if (project.github) {
-    window.open(project.github, "_blank", "noopener,noreferrer");
-  }
-};
+    const url = project.github || project.live;
+    if (url) window.open(url, "_blank", "noopener,noreferrer");
+  };
   const currentContent = () =>
     scroll.current?.querySelector(".fileview:not([hidden])");
   const selectContent = () => {

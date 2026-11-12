@@ -12,7 +12,6 @@
   {
     "id": "fundamentals-of-ai",
     "title": "Fundamentals of Artificial Intelligence",
-    "demoImage": "/images/certificates/ai.svg",
     "image": "/images/certificates/ai.jpg",
     "description": "Completed the 12-week NPTEL course in Fundamentals of Artificial Intelligence from July to October 2024, earning Elite certification with a score of 66%.",
     "issuer": "NPTEL",
@@ -22,7 +21,6 @@
   {
     "id": "database",
     "title": "Data Base Management System",
-    "demoImage": "/images/certificates/database.svg",
     "image": "/images/certificates/database.jpg",
     "description": "Focuses on relational data, SQL, and the relationships between tables. I apply these ideas when designing PostgreSQL schemas for backend services.",
     "issuer": "NPTEL",
@@ -32,7 +30,6 @@
   {
     "id": "full-stack-development",
     "title": "Full-Stack Development",
-    "demoImage": "/images/certificates/full-stack.svg",
     "image": "/images/certificates/full-stack.jpg",
     "description": "Connects frontend development with backend APIs and persistent storage. This training helped me build interfaces that work with real application data.",
     "issuer": "Euphoria GenX",

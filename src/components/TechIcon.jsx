@@ -14,6 +14,7 @@ const aliases = {
   "Scikit-learn": "scikitlearn",
   AWS: "amazonwebservices",
   "Tailwind CSS": "tailwindcss",
+  "Microsoft Copilot": "microsoftcopilot",
 };
 const symbols = {
   "Spring Boot": [SiSpringboot, "#6DB33F"],

@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowUpRight } from "lucide-react";
 import { portfolio } from "../data/data";
+import { DetailsTable } from "../components/DetailsTable";
 
 export function Research() {
   return (
@@ -11,52 +12,33 @@ export function Research() {
           Research &amp; Publication<b>.</b>
         </h1>
       </header>
-      <div
-        className="research-scroll"
-        role="region"
-        tabIndex={0}
-        aria-labelledby="research-title"
-      >
-        <table className="research-table" aria-labelledby="research-title">
-          <thead>
-            <tr>
-              {["No.", "Type", "Title", "Details", "Link"].map((label) => (
-                <th scope="col" key={label}>
-                  {label}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {portfolio.research.map((record, index) => (
-              <tr key={record.id} id={record.id} tabIndex={-1}>
-                <td>{index + 1}</td>
-                <td>{record.type}</td>
-                <td>
-                  <h2>{record.title}</h2>
-                </td>
-                <td>{record.details}</td>
-                <td>
-                  <a
-                    className="textaction"
-                    href={record.url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {record.linkLabel}
-                    <ArrowUpRight size={14} />
-                  </a>
-                  {record.demo && (
-                    <small className="demo-link-note">
-                      Demo · title search
-                    </small>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DetailsTable
+        className="research-details-table"
+        label="Research and publications"
+        headingLabel="Research type"
+        rows={portfolio.research.map((record) => ({
+          id: record.id,
+          heading: record.type,
+          content: (
+            <>
+              <h2>{record.title}</h2>
+              <p>{record.details}</p>
+              <a
+                className="textaction"
+                href={record.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {record.linkLabel}
+                <ArrowUpRight size={14} aria-hidden="true" />
+              </a>
+              {record.demo && (
+                <small className="demo-link-note">Demo · title search</small>
+              )}
+            </>
+          ),
+        }))}
+      />
     </div>
   );
 }

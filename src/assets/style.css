@@ -1660,7 +1660,7 @@ dialog::backdrop {
 :root[data-theme="light"] {
   --github-ink: #181717;
 }
-:root:not([data-theme="light"]) .tech-mark img[data-brand="github"] {
+:root:not([data-theme="light"]) .tech-mark img:is([data-brand="github"], [data-brand="codex"], [data-brand="cursor"]) {
   filter: invert(1);
 }
 .demo-link-note {
@@ -2034,15 +2034,18 @@ footer .developer-credit {
 }
 
 .projects-table {
-  --project-photo-width: 38%;
+  --project-photo-width: 30%;
+}
+
+.details-table {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   color: var(--text);
 }
 
-.projects-table th,
-.projects-table td {
+.details-table th,
+.details-table td {
   padding: clamp(8px, 1.5vw, 18px);
   border: 1px solid var(--border);
   text-align: left;
@@ -2050,13 +2053,19 @@ footer .developer-credit {
   overflow-wrap: anywhere;
 }
 
-.projects-table thead th {
+.details-table thead th {
   background: var(--panel);
   font-weight: 600;
 }
 
-.projects-table thead th:first-child {
+.details-table thead th:first-child {
   width: 30%;
+  text-align: center;
+}
+
+.details-table th[scope="row"] {
+  text-align: center;
+  vertical-align: middle;
 }
 
 .projects-table-name {
@@ -2064,7 +2073,7 @@ footer .developer-credit {
   padding: 0;
   color: var(--green);
   font: inherit;
-  text-align: left;
+  text-align: center;
   overflow-wrap: anywhere;
   cursor: pointer;
 }
@@ -2075,6 +2084,27 @@ footer .developer-credit {
 
 .projects-table td p {
   margin: 0;
+}
+
+.research-details-table td h2 {
+  margin: 0 0 0.5rem;
+  font-size: 1.125rem;
+  line-height: 1.4;
+}
+
+.research-details-table td p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.research-details-table .textaction {
+  max-width: 100%;
+  min-height: 2.75rem;
+}
+
+.research-details-table .textaction svg {
+  flex-shrink: 0;
 }
 
 .projects-table-live {
@@ -2118,14 +2148,14 @@ footer .developer-credit {
 /* Space below the tech stack for a gallery or a single picture. */
 .projects-table-photos,
 .projects-table td>.projects-table-image {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .projects-table-gallery {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* Apply the same dimensions to standalone and gallery pictures. */
@@ -2136,7 +2166,7 @@ footer .developer-credit {
   width: var(--project-photo-width);
   height: auto;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
 }
 
@@ -2170,7 +2200,7 @@ footer .developer-credit {
 
 @media (max-width: 600px) {
   .projects-table {
-    --project-photo-width: 45%;
+    --project-photo-width: 100%;
   }
 
   .projects-table-gallery-toggle {

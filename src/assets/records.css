@@ -1,21 +1,20 @@
 .records-page {
   container-type: inline-size;
   width: 100%;
-  max-width: 60rem;
+  max-width: 56rem;
   min-width: 0;
 }
 
 .records-page-heading .pagetitle {
-  margin-bottom: 20px;
+  margin: 0 0 20px;
 }
 
+/* One continuous list with a divider between records. */
 .records-list {
+  list-style: none;
   margin: 0;
   padding: 0;
-  list-style: none;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--panel);
+  border-top: 1px solid var(--border);
 }
 
 .records-list > li + li {
@@ -23,30 +22,32 @@
 }
 
 .record-entry {
-  padding: clamp(16px, 3cqi, 28px);
+  padding: 20px 0;
   overflow-wrap: anywhere;
 }
 
-/* Compact layout is the default. */
 .record-entry-heading {
   display: grid;
-  gap: 8px;
+  gap: 6px;
+  align-items: baseline;
 }
 
 .record-entry-title {
   min-width: 0;
 }
 
-.records-page .record-entry-title h2 {
+/* Institution name or experience title. */
+.record-entry-title h2 {
   margin: 0;
   color: var(--text);
-  font-size: clamp(17px, 2.5cqi, 21px);
+  font-size: 18px;
   font-weight: 600;
   line-height: 1.35;
 }
 
+/* Degree or qualification, when supplied. */
 .record-entry-title p {
-  margin: 5px 0 0;
+  margin: 4px 0 0;
   color: var(--green);
   font-size: 14px;
   line-height: 1.5;
@@ -55,22 +56,25 @@
 .record-period {
   color: var(--dim);
   font: 12px/1.5 var(--mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .record-entry .record-description {
-  max-width: 70ch;
-  margin: 14px 0 0;
+  max-width: 68ch;
+  margin: 10px 0 0;
   color: var(--text);
   font-size: 14px;
   line-height: 1.65;
-  white-space: pre-line;
 }
 
-/* Give dates their own column when the editor has room. */
+/* Use the editor width so opening the sidebar also adjusts the layout. */
 @container (min-width: 36rem) {
+  .record-entry {
+    padding: 24px 0;
+  }
+
   .record-entry-heading {
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: baseline;
     column-gap: 24px;
   }
 

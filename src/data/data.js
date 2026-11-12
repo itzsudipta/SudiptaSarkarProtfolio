@@ -2,7 +2,7 @@
 export const portfolio = {
   name: "Sudipta Sarkar",
   developerCredit: "Developed By Sudipta",
-  role: "Backend & AI Developer",
+  role: "Backend Dev & Researcher",
   location: "Kolkata, India",
   intro:
     "I build Java backend systems and AI applications that turn complex data into useful tools.",
@@ -29,6 +29,10 @@ export const portfolio = {
     ],
     ["Database Management", ["PostgreSQL", "MySQL"]],
     ["Cloud & Platforms", ["AWS", "Docker", "Git", "GitHub", "Postman"]],
+    [
+      "AI Platforms",
+      ["Claude", "Microsoft Copilot", "Codex", "Antigravity", "Gemini", "Cursor"],
+    ],
   ],
   academicJourney: [
     [
@@ -44,14 +48,14 @@ export const portfolio = {
       "Grade: Distinction [I] · OGPA: 8.3\n\nActivities and societies:\n• Attended the Science and Science Conference (2022) on Artificial Intelligence vs. Natural Intelligence.",
     ],
     [
-      "Mar 2019 – Apr 2021",
+      "",
       "Higher Secondary · Art/Art Studies, General",
       "Chakdaha Ramlal Academy",
       "Grade: B+\n\nActivities and societies:\n• Participated in the Inter-School Science Fair (2017), demonstrating interest in science and innovation.\n• Participated in the National Olympiad in Computer and English, showcasing analytical and problem-solving skills.",
     ],
   ],
   building:
-    "I’m currently working on Java backend development and researching machine learning applications in disaster management.",
+    "Developing Java-based backend systems while researching machine learning applications in disaster management, with a focus on UAV-assisted communication networks for post-disaster respons",
   experience: [
     [
       "College project",
@@ -84,7 +88,7 @@ export const portfolio = {
   },
   website: "https://iamsudiptasarkar.me/",
   email: "info.sudipta127001@gmail.com",
-  cvUrl: "",
+  cvUrl: "/files/resume/SUDIPTA_SDE_RESUME.pdf",
   photoUrl:
     "/images/profile/SudiptaSarkar.png",
   files: {
@@ -102,12 +106,12 @@ export const portfolio = {
       id: "paper-rag",
       type: "Published Research Paper",
       title:
-        "Retrieval-Augmented Generation (RAG) Combined with Diffusion Models",
+        "A Multimodal AI Approach for Fashion Design using Retrieval-Augmented Generation and Diffusion Models",
       details:
         "Co-authored with Prof. Ritwika Mukherjee, Assistant Professor, NiT Kolkata",
       linkLabel: "IEEE Xplore",
       url: "https://ieeexplore.ieee.org/search/searchresult.jsp?queryText=Retrieval-Augmented%20Generation%20(RAG)%20Combined%20with%20Diffusion%20Models",
-      demo: true,
+      demo: false,
     },
     {
       id: "patent-tof",

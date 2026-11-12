@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { CatalogStatus } from "../components/CatalogStatus";
 import { TechIcon } from "../components/TechIcon";
+import { DetailsTable } from "../components/DetailsTable";
 
 function ProjectGallery({ project }) {
   const [expanded, setExpanded] = useState(false);
@@ -73,62 +74,56 @@ export function Projects({ inspect, catalog }) {
         ))}
       </div>
       {catalog.items.length > 0 && (
-  <table className="projects-table" aria-label="Projects">
-    <thead>
-      <tr>
-        <th scope="col">Project name</th>
-        <th scope="col">Description & tech stack</th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {catalog.items
-        .filter((p) => tag === "All" || p.tags.includes(tag))
-        .map((p) => (
-          <tr key={p.id}>
-            <th scope="row">
-              <button
-                type="button"
-                className="projects-table-name"
-                onClick={() => inspect(p)}
-              >
-                {p.name}
-              </button>
-            </th>
-
-            <td>
-              <p>{p.description}</p>
-
-              {p.live && (
-                <a
-                  className="textaction projects-table-live"
-                  href={p.live}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`Visit ${p.name} live site (opens in a new tab)`}
+        <DetailsTable
+          className="projects-table"
+          label="Projects"
+          headingLabel="Project name"
+          rows={catalog.items
+            .filter((p) => tag === "All" || p.tags.includes(tag))
+            .map((p) => ({
+              id: p.id,
+              heading: (
+                <button
+                  type="button"
+                  className="projects-table-name"
+                  onClick={() => inspect(p)}
                 >
-                  <span>Live site</span>
-                  <ArrowUpRight size={15} aria-hidden="true" />
-                </a>
-              )}
+                  {p.name}
+                </button>
+              ),
+              content: (
+                <>
+                  <p>{p.description}</p>
 
-              {p.tags.length > 0 && (
-                <ul className="projects-table-stack" aria-label="Tech stack">
-                  {p.tags.map((tech) => (
-                    <li key={tech}>
-                      <TechIcon name={tech} caption />
-                    </li>
-                  ))}
-                </ul>
-              )}
+                  {p.live && (
+                    <a
+                      className="textaction projects-table-live"
+                      href={p.live}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`Visit ${p.name} live site (opens in a new tab)`}
+                    >
+                      <span>Live site</span>
+                      <ArrowUpRight size={15} aria-hidden="true" />
+                    </a>
+                  )}
 
-              <ProjectGallery project={p} />
-            </td>
-          </tr>
-        ))}
-    </tbody>
-  </table>
-)}
+                  {p.tags.length > 0 && (
+                    <ul className="projects-table-stack" aria-label="Tech stack">
+                      {p.tags.map((tech) => (
+                        <li key={tech}>
+                          <TechIcon name={tech} caption />
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+
+                  <ProjectGallery project={p} />
+                </>
+              ),
+            }))}
+        />
+      )}
     </>
   );
 }

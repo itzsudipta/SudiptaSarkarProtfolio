@@ -7,7 +7,7 @@
     "tags": ["HTML5","CSS3","YOLOv8", "Python", "Flask"],
     "art": "graph",
     "github": "https://github.com/itzsudipta/NIRIKSHA-Ai-Powered-TOF-Drone-System",
-    "live": "",
+    "live": "https://d3njt5ezx655xk.cloudfront.net",
     "featured": true,
     "image": "/images/projects/Niriksha.png",
     "tableImages": [
@@ -60,7 +60,7 @@
     "tags": ["Next.js" , "Python" , "Supabase"],
     "art": "fabric",
     "github": "",
-    "live": "http://localhost:5174/",
+    "live": "https://fabricanova.vercel.app/",
     "detail": "Semantic search selects a product image and metadata. Gemma drafts a design description and Swin2SR enlarges the visual reference.",
     "featured": true,
     "image": "/images/projects/fabricanova/fabricanova.png",
