@@ -97,9 +97,9 @@ export const portfolio = {
     academics: "academics.ts",
     experience: "experience.ts",
     projects: "projects/projects.ts",
-    research: "research/notes.md",
+    research: "research/research.md",
     certificates: "Achievements.md",
-    contact: "contact.md",
+    contact: "connect.md",
   },
   research: [
     {

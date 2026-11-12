@@ -7,7 +7,7 @@ export function Research() {
   return (
     <div className="research-index">
       <header className="research-head">
-        <div className="comment">// research/notes.md</div>
+        <div className="comment">// research/research.md</div>
         <h1 id="research-title" className="pagetitle">
           Research &amp; Publication<b>.</b>
         </h1>

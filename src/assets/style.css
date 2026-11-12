@@ -1403,6 +1403,10 @@ dialog::backdrop {
   font: 11px/1.5 var(--mono);
   color: var(--dim);
 }
+.stacklist dt {
+  color: var(--text);
+  font-weight: 600;
+}
 .stacklist .tags {
   margin-top: 0;
 }

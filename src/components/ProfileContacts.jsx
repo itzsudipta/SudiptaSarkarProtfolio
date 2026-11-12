@@ -15,7 +15,7 @@ const marks = {
 export function ProfileContacts() {
   return (
     <section className="profile-section">
-      <h2>Contacts</h2>
+      <h2>Connect</h2>
       <ul className="profile-contacts">
         {Object.entries({
           Email: "mailto:" + portfolio.email,

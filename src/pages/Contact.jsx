@@ -1,5 +1,4 @@
 import React, { useState, useRef } from "react";
-import { Send } from "lucide-react";
 import { portfolio as d } from "../data/data";
 import { ProfileContacts } from "../components/ProfileContacts";
 import { sendMessage } from "../services/contact";
@@ -10,7 +9,7 @@ export function Contact() {
   const pending = useRef(false);
   return (
     <>
-      <div className="comment">// contact.md</div>
+      <div className="comment">// connect.md</div>
       <h1 className="pagetitle">
         Get in touch<b>.</b>
       </h1>
@@ -75,7 +74,6 @@ export function Contact() {
         ))}
         <button type="submit" className="primary" disabled={sending}>
           {sending ? "Sending…" : "Send message"}
-          <Send size={15} />
         </button>
         <output aria-live="polite">{note}</output>
       </form>
