@@ -1,49 +1,71 @@
-# Save as: .github/workflows/deploy-s3.yml
-name: PortfolioCI/CDtoS3
+name: Deploy React to AWS
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
-permissions:
-  id-token: write   # required for OIDC
-  contents: read    # required for checkout
+# Prevent deployments from running at the same time.
+concurrency:
+  group: production-deployment
+  cancel-in-progress: false
 
 env:
-  AWS_REGION: ap-south-1          # change to your bucket's region
-  BUILD_DIR: dist                 # Vite = dist, Create React App = build
+  AWS_REGION: ap-south-1
+  BUILD_DIR: dist # Use "build" for Create React App.
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      # 1. Download your repository onto the runner.
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Prepare Node.js.
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: "22"
           cache: npm
 
+      # 3. Install dependencies using package-lock.json.
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      # 4. Generate the production website files.
+      - name: Build application
         run: npm run build
 
-      - name: Configure AWS credentials (OIDC)
+      # 5. Verify the build before syncing with --delete.
+      - name: Verify build output
+        run: test -f "$BUILD_DIR/index.html"
+
+      # 6. Obtain temporary AWS credentials through OIDC.
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
           aws-region: ${{ env.AWS_REGION }}
 
+      # 7. Upload the build and remove obsolete destination files.
       - name: Sync to S3
+        env:
+          S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
         run: |
-          aws s3 sync ${{ env.BUILD_DIR }}/ s3://${{ secrets.S3_BUCKET_NAME }}/ --delete
+          aws s3 sync "$BUILD_DIR/" "s3://$S3_BUCKET_NAME/" --delete
 
-     
+      # 8. Request removal of cached website files.
       - name: Invalidate CloudFront cache
+        env:
+          DISTRIBUTION_ID: ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }}
         run: |
           aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --distribution-id "$DISTRIBUTION_ID" \
             --paths "/*"
