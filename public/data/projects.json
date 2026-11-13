@@ -9,26 +9,26 @@
     "github": "https://github.com/itzsudipta/NIRIKSHA-Ai-Powered-TOF-Drone-System",
     "live": "https://d3njt5ezx655xk.cloudfront.net",
     "featured": true,
-    "image": "/images/projects/Niriksha.png",
+    "image": "/images/projects/Niriksha.webp",
     "tableImages": [
       {
-        "src": "/images/projects/Niriksha.png",
+        "src": "/images/projects/Niriksha.webp",
         "alt": "Niriksha project preview"
       },
       {
-        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_.png",
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_.webp",
         "alt": "Niriksha screenshot 1"
       },
       {
-        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(1).png",
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(1).webp",
         "alt": "Niriksha screenshot 2"
       },
       {
-        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(2).png",
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(2).webp",
         "alt": "Niriksha screenshot 3"
       },
       {
-        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(3).png",
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(3).webp",
         "alt": "Niriksha screenshot 4"
       }
     ]
@@ -44,10 +44,10 @@
     "github": "https://github.com/itzsudipta/FileTracker",
     "live": "",
     "featured": true,
-    "image": "/images/projects/fileTracker/image.png",
+    "image": "/images/projects/fileTracker/image.webp",
     "tableImages": [
       {
-        "src": "/images/projects/fileTracker/image.png",
+        "src": "/images/projects/fileTracker/image.webp",
         "alt": "FileTracker project preview"
       }
     ]
@@ -63,30 +63,30 @@
     "live": "https://fabricanova.vercel.app/",
     "detail": "Semantic search selects a product image and metadata. Gemma drafts a design description and Swin2SR enlarges the visual reference.",
     "featured": true,
-    "image": "/images/projects/fabricanova/fabricanova.png",
+    "image": "/images/projects/fabricanova/fabricanova.webp",
     "tableImages": [
       {
-        "src": "/images/projects/fabricanova/fabricanova.png",
+        "src": "/images/projects/fabricanova/fabricanova.webp",
         "alt": "Fabricanova project preview"
       },
       {
-        "src": "/images/projects/fabricanova/Screenshot%202026-01-11%20162552.png",
+        "src": "/images/projects/fabricanova/Screenshot%202026-01-11%20162552.webp",
         "alt": "Fabricanova screenshot 1"
       },
       {
-        "src": "/images/projects/fabricanova/Screenshot%202026-01-11%20221650.png",
+        "src": "/images/projects/fabricanova/Screenshot%202026-01-11%20221650.webp",
         "alt": "Fabricanova screenshot 2"
       },
       {
-        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175647.png",
+        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175647.webp",
         "alt": "Fabricanova screenshot 3"
       },
       {
-        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175708.png",
+        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175708.webp",
         "alt": "Fabricanova screenshot 4"
       },
       {
-        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175748.png",
+        "src": "/images/projects/fabricanova/Screenshot%202026-11-11%20175748.webp",
         "alt": "Fabricanova screenshot 5"
       }
     ]

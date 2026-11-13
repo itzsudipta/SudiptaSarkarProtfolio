@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Play,
+  Download,
   Github,
   GitBranch,
   PanelLeft,
@@ -28,12 +28,12 @@ export function Toolbar({
       </span>
       <div className="flex-1" />
       <button
-        className="run"
+        className="run cv-download"
         aria-label="Download CV"
         onClick={downloadCV}
-        disabled={loadingCV}
+        disabled={loadingCV && !d.cvUrl}
       >
-        <Play size={14} /> <span>Download CV</span>
+        <Download size={15} aria-hidden="true" /> <span>Download CV</span>
       </button>
       <a
         className="gh"

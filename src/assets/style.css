@@ -139,6 +139,13 @@ footer span,
   gap: 9px;
   padding-right: 10px;
 }
+.brand-logo {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  object-fit: contain;
+}
 .brandmark,
 .monogram {
   font: 700 15px var(--mono);
@@ -246,6 +253,25 @@ kbd {
 .searchbtn {
   padding: 5px 7px;
   border-radius: 4px;
+}
+.toolbar .cv-download {
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  border: 1px solid var(--green);
+  background: var(--green);
+  color: var(--onGreen);
+  font-weight: 600;
+}
+.toolbar .cv-download svg {
+  color: currentColor;
+  flex-shrink: 0;
+}
+.toolbar .cv-download:hover:not(:disabled) {
+  filter: brightness(0.94);
+}
+.toolbar .cv-download:focus-visible {
+  outline: 0.125rem solid var(--text);
+  outline-offset: 0.125rem;
 }
 .run svg,
 .comment,

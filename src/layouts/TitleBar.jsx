@@ -32,7 +32,13 @@ export function TitleBar({ menus, setWindow, windowState, maximize, search, them
   return (
     <header className="titlebar" ref={bar}>
       <div className="brand">
-        <span className="brandmark">&gt;_</span>
+        <img
+          className="brand-logo"
+          src="/images/logo/SudiptaSarkarLogo.webp"
+          alt=""
+          width="32"
+          height="32"
+        />
         <b className="brand-name">{portfolio.name}</b>
       </div>
       <button

@@ -90,7 +90,7 @@ export const portfolio = {
   email: "info.sudipta127001@gmail.com",
   cvUrl: "/files/resume/SUDIPTA_SDE_RESUME.pdf",
   photoUrl:
-    "/images/profile/SudiptaSarkar.png",
+    "/images/profile/SudiptaSarkar.webp",
   files: {
     // home: "home.tsx",
     profile: "profile.ts",

@@ -11,7 +11,12 @@ export function download(name, body) {
 }
 export function cv(projects) {
   if (d.cvUrl) {
-    window.open(d.cvUrl, "_blank", "noopener");
+    const link = document.createElement("a");
+    link.href = d.cvUrl;
+    link.download = d.name.replace(/\s+/g, "-") + "-CV.pdf";
+    document.body.append(link);
+    link.click();
+    link.remove();
     return;
   }
   download(

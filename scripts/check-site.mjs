@@ -10,6 +10,17 @@ import { portfolio } from "../src/data/data.js";
 // intercepted in the isolated browser; no messages are sent to the live service.
 const output = path.resolve("test-results/site-check");
 const results = [];
+const filter = process.env.SITE_CHECK_FILTER ? new RegExp(process.env.SITE_CHECK_FILTER) : null;
+let retainedChecks = 0;
+if (filter) {
+  try {
+    const previous = JSON.parse(await fs.readFile(path.join(output, "report.json"), "utf8"));
+    results.push(...previous.results.filter(({ name }) => !filter.test(name)));
+    retainedChecks = results.length;
+  } catch (error) {
+    if (error.code !== "ENOENT") throw error;
+  }
+}
 let browser, server, socket, profile, session;
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const pending = new Map();
@@ -67,6 +78,7 @@ async function open(id) {
 }
 
 async function test(name, work) {
+  if (filter && !filter.test(name)) return;
   try {
     await work();
     results.push({ name, status: "passed" });
@@ -154,10 +166,38 @@ try {
       const selector = `.tech-mark[title="${name}"] img`;
       await until(`document.querySelector(${JSON.stringify(selector)})?.naturalWidth > 0`, name);
     }
+    await evaluate("window.__cvAnchorClick=HTMLAnchorElement.prototype.click;HTMLAnchorElement.prototype.click=function(){window.__cvDownloaded={href:this.href,name:this.download};};");
     await click('[aria-label="Download CV"]');
-    assert.equal(await evaluate("window.__opened.at(-1)"), portfolio.cvUrl);
+    const downloaded = await evaluate("window.__cvDownloaded");
+    await evaluate("void (HTMLAnchorElement.prototype.click=window.__cvAnchorClick)");
+    assert.equal(downloaded.href, origin + portfolio.cvUrl);
+    assert.equal(downloaded.name, portfolio.name.replace(/\s+/g, "-") + "-CV.pdf");
     const response = await fetch(origin + portfolio.cvUrl);
     assert.equal(Buffer.from(await response.arrayBuffer()).subarray(0, 5).toString(), "%PDF-");
+  });
+
+  await test("Header logo, browser favicons, touch icon and manifest assets", async () => {
+    assert.equal(await evaluate("document.title"), portfolio.name);
+    await until("document.querySelector('.brand-logo')?.naturalWidth > 0", "header logo");
+    assert.equal(await evaluate("document.querySelector('.brand-logo').getBoundingClientRect().width"), 32);
+    const links = await evaluate("Array.from(document.querySelectorAll('head link[rel=icon],head link[rel=apple-touch-icon],head link[rel=manifest]')).map(link=>link.href)");
+    assert.equal(links.length, 5);
+    for (const url of links) {
+      const response = await fetch(url);
+      assert.equal(response.status, 200, url);
+      assert.ok(!response.headers.get('content-type')?.includes('text/html'), url);
+    }
+    const manifestURL = await evaluate("document.querySelector('link[rel=manifest]').href");
+    const manifest = await (await fetch(manifestURL)).json();
+    for (const icon of manifest.icons) {
+      const response = await fetch(new URL(icon.src, manifestURL));
+      assert.equal(response.status, 200, icon.src);
+      assert.ok(response.headers.get('content-type')?.includes('image/png'), icon.src);
+    }
+    const tileConfig = await evaluate("document.querySelector('meta[name=msapplication-config]').content");
+    const xml = await (await fetch(origin + tileConfig)).text();
+    const tileURL = xml.match(/square150x150logo src="([^"]+)"/)[1];
+    assert.equal((await fetch(origin + tileURL)).status, 200);
   });
 
   await test("All seven editor pages open through Search Everywhere", async () => {
@@ -334,8 +374,8 @@ try {
         }
         if ([375, 1440].includes(width)) {
           await open("research");
-          const screenshot = await call("Page.captureScreenshot", { format: "png" });
-          await fs.writeFile(path.join(output, `research-${width}-${theme}.png`), Buffer.from(screenshot.data, "base64"));
+          const screenshot = await call("Page.captureScreenshot", { format: "webp", quality: 95 });
+          await fs.writeFile(path.join(output, `research-${width}-${theme}.webp`), Buffer.from(screenshot.data, "base64"));
         }
       }
     }
@@ -362,8 +402,9 @@ try {
 
   await test("Catalog failure and Retry recovery", async () => {
     await call("Page.addScriptToEvaluateOnNewDocument", { source: "window.__failCatalog='projects';" });
+    await evaluate("window.__reloadMarker = true");
     await call("Page.reload", {});
-    await until("document.querySelector('#tab-profile')", "reloaded app");
+    await until("!window.__reloadMarker && document.readyState === 'complete' && document.querySelector('#tab-profile')", "reloaded app");
     await open("projects");
     await until("document.querySelector('[role=alert]')", "catalog error state");
     await click('[role=alert] button');
@@ -373,9 +414,11 @@ try {
   await test("No uncaught browser exceptions", async () => assert.deepEqual(errors, []));
 
   await test("All configured local project, certificate, portrait and CV assets load", async () => {
+    await until("document.querySelector('.brand-logo')", "header available for asset checks");
     const projects = await (await fetch(origin + "/data/projects.json")).json();
     const certificates = await (await fetch(origin + "/data/certificates.json")).json();
     const urls = new Set([portfolio.photoUrl, portfolio.cvUrl]);
+    urls.add(await evaluate("document.querySelector('.brand-logo').getAttribute('src')"));
     for (const p of projects) for (const url of [p.image,p.tableImage,...(p.tableImages || []).map(i=>i.src)].filter(Boolean)) urls.add(url);
     for (const c of certificates) for (const url of [c.image,c.demoImage,c.url].filter(Boolean)) if(url.startsWith('/')) urls.add(url);
     const checks = await Promise.all([...urls].map(async url => ({url,response:await fetch(origin+url)})));
@@ -383,13 +426,32 @@ try {
       assert.equal(response.status,200,url);
       assert.ok(!response.headers.get('content-type')?.includes('text/html'),`Asset returned SPA HTML: ${url}`);
     }
+    const webps = [...urls].filter(url => /\.webp$/i.test(url));
+    assert.ok(webps.length > 0, 'WebP assets are configured');
+    assert.ok(![...urls].some(url => url.startsWith('/images/') && /\.(png|jpe?g)$/i.test(url)), 'Site photos use WebP paths');
+    for(const {url,response} of checks.filter(({url}) => /\.webp$/i.test(url))) {
+      assert.ok(response.headers.get('content-type')?.includes('image/webp'), url);
+      const bytes = Buffer.from(await response.arrayBuffer());
+      assert.equal(bytes.subarray(0,4).toString(), 'RIFF', url);
+      assert.equal(bytes.subarray(8,12).toString(), 'WEBP', url);
+    }
+    const decoded = await evaluate(`(async () => {
+      const urls = ${JSON.stringify(webps)};
+      for (const url of urls) {
+        const bitmap = await createImageBitmap(await (await fetch(url)).blob());
+        if (!bitmap.width || !bitmap.height) throw new Error('Invalid image: ' + url);
+        bitmap.close();
+      }
+      return urls.length;
+    })()`);
+    assert.equal(decoded, webps.length, 'All WebP images decode in the browser');
   });
 } catch (error) {
   results.push({ name: "Browser setup", status: "failed", error: error.stack || error.message });
   console.error(error);
 } finally {
   await fs.mkdir(output, { recursive: true });
-  await fs.writeFile(path.join(output, "report.json"), JSON.stringify({ checkedAt: new Date().toISOString(), results }, null, 2));
+  await fs.writeFile(path.join(output, "report.json"), JSON.stringify({ checkedAt: new Date().toISOString(), ...(filter ? { rerunFilter: filter.source, retainedChecks } : {}), results }, null, 2));
   if (socket?.readyState === WebSocket.OPEN) { try { await call("Browser.close", {}, undefined); } catch {} socket.close(); }
   browser?.kill();
   await server?.close();

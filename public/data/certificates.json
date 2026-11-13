@@ -3,7 +3,7 @@
     "id": "iot",
     "title": "Introduction to Internet of Things",
     "demoImage": "/images/certificates/iot.svg",
-    "image": "/images/certificates/iot.jpg",
+    "image": "/images/certificates/iot.webp",
     "description": "Explores how sensors collect measurements and connected devices exchange data. This foundation informs my interest in drone sensing and smart farming.",
     "issuer": "NPTEL",
     "institution": "IIT Kharagpur",
@@ -12,7 +12,7 @@
   {
     "id": "fundamentals-of-ai",
     "title": "Fundamentals of Artificial Intelligence",
-    "image": "/images/certificates/ai.jpg",
+    "image": "/images/certificates/ai.webp",
     "description": "Completed the 12-week NPTEL course in Fundamentals of Artificial Intelligence from July to October 2024, earning Elite certification with a score of 66%.",
     "issuer": "NPTEL",
     "institution": "IIT Guwahati",
@@ -21,7 +21,7 @@
   {
     "id": "database",
     "title": "Data Base Management System",
-    "image": "/images/certificates/database.jpg",
+    "image": "/images/certificates/database.webp",
     "description": "Focuses on relational data, SQL, and the relationships between tables. I apply these ideas when designing PostgreSQL schemas for backend services.",
     "issuer": "NPTEL",
     "institution": "IIT Kharagpur",
@@ -30,7 +30,7 @@
   {
     "id": "full-stack-development",
     "title": "Full-Stack Development",
-    "image": "/images/certificates/full-stack.jpg",
+    "image": "/images/certificates/full-stack.webp",
     "description": "Connects frontend development with backend APIs and persistent storage. This training helped me build interfaces that work with real application data.",
     "issuer": "Euphoria GenX",
     "institution": "Narula Institute of Technology",
@@ -39,7 +39,7 @@
   {
     "id": "ardent-iot",
     "title": "Internet of Things - Smart Home Automation",
-    "image": "/images/certificates/ardent-iot.jpg",
+    "image": "/images/certificates/ardent-iot.webp",
     "description": "Completed 30 hours of Internet of Things training with a project on smart home automation using IoT, held from 5 to 10 February 2024.",
     "issuer": "Ardent",
     "institution": "Narula Institute of Technology",

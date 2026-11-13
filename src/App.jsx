@@ -143,7 +143,7 @@ export default function App() {
       ],
       ["Close tab", () => close(active), !active],
       ["Reopen closed tab", () => open(closed.at(-1)), !closed.length],
-      ["Download CV", downloadCV, projects.loading],
+      ["Download CV", downloadCV, projects.loading && !d.cvUrl],
     ],
     Edit: [
       ["Select page text", selectContent, !active],
