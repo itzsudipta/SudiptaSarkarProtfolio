@@ -102,8 +102,8 @@ async function menu(name, item) {
   }
 }
 
-async function viewport(width, height = 900) {
-  await call("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: 1, mobile: false });
+async function viewport(width, height = 900, mobile = false) {
+  await call("Emulation.setDeviceMetricsOverride", { width, height, deviceScaleFactor: mobile ? 2 : 1, mobile });
   await pause(100);
 }
 
@@ -242,6 +242,69 @@ try {
     await evaluate("Array.from(document.querySelectorAll('.filters button')).find(b=>b.textContent==='All').click()");
   });
 
+  await test("Experience image galleries, independent expansion and responsive sizing", async () => {
+    await open('experience');
+    assert.equal(await evaluate("document.querySelectorAll('.fileview:not([hidden]) .image-gallery').length"), 0, 'Empty image lists do not show placeholder galleries');
+    const projects = await (await fetch(origin + '/data/projects.json')).json();
+    const images = projects[0].tableImages.slice(0,4).map(({src},index) => ({src,alt:index ? `Experience test image ${index+1}` : ''}));
+    await evaluate(`(async () => {
+      const {portfolio} = await import('/src/data/data.js');
+      window.__experienceImages = portfolio.experience.map(entry => entry[3]);
+      portfolio.experience[0][3] = ${JSON.stringify(images)};
+      portfolio.experience[1][3] = ${JSON.stringify(images)};
+      portfolio.experience[2][3] = ${JSON.stringify(images.slice(0,1))};
+    })()`);
+    const first = '.fileview:not([hidden]) .records-list > li:first-child';
+    const second = '.fileview:not([hidden]) .records-list > li:nth-child(2)';
+    try {
+      await open('experience');
+      assert.equal(await evaluate("document.querySelectorAll('.fileview:not([hidden]) .image-gallery').length"),3);
+      const ids=await evaluate("Array.from(document.querySelectorAll('.fileview:not([hidden]) .image-gallery-items')).map(g=>g.id)");
+      assert.equal(new Set(ids).size,3,'Each gallery has a unique control target');
+      assert.equal(await evaluate(`document.querySelectorAll('${first} img').length`),3);
+      assert.match(await evaluate(`document.querySelector('${first} img').alt`),/College Project Team Lead image 1/);
+      await click(`${first} .image-gallery-toggle`);
+      assert.equal(await evaluate(`document.querySelectorAll('${first} img').length`),4);
+      assert.equal(await evaluate(`document.querySelectorAll('${second} img').length`),3,'Expanding one gallery does not expand another');
+      assert.equal(await evaluate(`document.querySelector('${first} .image-gallery-toggle').getAttribute('aria-expanded')`),'true');
+      await evaluate(`document.querySelector('${first} .image-gallery-toggle').focus()`);
+      await call('Input.dispatchKeyEvent',{type:'keyDown',key:'Enter',code:'Enter',windowsVirtualKeyCode:13,text:'\r',unmodifiedText:'\r'});
+      await call('Input.dispatchKeyEvent',{type:'keyUp',key:'Enter',code:'Enter',windowsVirtualKeyCode:13});
+      await pause(100);
+      assert.equal(await evaluate(`document.querySelectorAll('${first} img').length`),3,'Keyboard activates the gallery toggle');
+      for(const theme of ['light','dark']) {
+        if(await evaluate('document.documentElement.dataset.theme')!==theme)await click('[aria-label="Switch theme"]');
+        for(const width of [320,375,600,768,1024,1440]) {
+          await viewport(width,900,width<=600);
+          await open('experience');
+          await evaluate("document.querySelector('.editor').scrollTo(0,0)");
+          if(width<=600) assert.equal(await evaluate("!!document.querySelector('.sidebar')"),false,'Gallery is visible without the phone drawer covering it');
+          const layout=await evaluate(`(() => {
+            const page=document.querySelector('.fileview:not([hidden])');
+            const gallery=document.querySelector('${first} .image-gallery-items');
+            const images=Array.from(gallery.querySelectorAll('img'));
+            const rect=gallery.getBoundingClientRect();
+            return {overflow:page.scrollWidth>page.clientWidth+1,ratio:images[0].getBoundingClientRect().width/rect.width,contained:images.every(img=>{const r=img.getBoundingClientRect();return r.left>=rect.left-1&&r.right<=rect.right+1;}),fit:getComputedStyle(images[0]).objectFit};
+          })()`);
+          assert.ok(!layout.overflow&&layout.contained,`Experience gallery at ${width}/${theme}: ${JSON.stringify(layout)}`);
+          assert.ok(Math.abs(layout.ratio-(width<=600?1:0.3))<0.01, 'Image sizes use percentages');
+          assert.equal(layout.fit,'contain','Images are not cropped');
+          if([375,1440].includes(width)) {
+            const screenshot=await call('Page.captureScreenshot',{format:'webp',quality:95});
+            await fs.writeFile(path.join(output,`experience-gallery-fixture-${width}-${theme}.webp`),Buffer.from(screenshot.data,'base64'));
+          }
+        }
+      }
+    } finally {
+      await evaluate(`(async () => {const {portfolio}=await import('/src/data/data.js');portfolio.experience.forEach((entry,index)=>{entry[3]=window.__experienceImages[index];});})()`);
+      await viewport(1440);
+      await open('experience');
+    }
+    assert.equal(await evaluate("document.querySelectorAll('.fileview:not([hidden]) .image-gallery').length"),0,'Temporary gallery images are removed after the test');
+    await open('academics');
+    assert.equal(await evaluate("document.querySelectorAll('.fileview:not([hidden]) .image-gallery').length"),0,'Academic records are unchanged');
+  });
+
   await test("Achievements previews, modal close and credential PDFs", async () => {
     await open("certificates");
     await until("document.querySelectorAll('.certificate-card').length === 5", "certificates");
@@ -351,6 +414,56 @@ try {
     await until("document.querySelector('#tab-profile')", "file picker opens profile");
   });
 
+  await test("Phone footer, status notices and large text stay readable without overlap", async () => {
+    const inspect = async () => evaluate(`(() => {
+      const footer=document.querySelector('.statusbar');
+      const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height};};
+      const items=Array.from(footer.children).filter(el=>getComputedStyle(el).display!=='none'&&el.getBoundingClientRect().width>0).map(el=>({name:el.className,...rect(el)}));
+      return {footer:rect(footer),items,display:getComputedStyle(footer).display,overflow:footer.scrollWidth>footer.clientWidth+1,viewport:innerWidth,height:innerHeight,encoding:getComputedStyle(document.querySelector('.status-encoding')).display};
+    })()`);
+    const fits = (layout) => {
+      assert.ok(!layout.overflow, JSON.stringify(layout));
+      assert.ok(Math.abs(layout.footer.bottom-layout.height)<=1, 'Footer stays at the viewport bottom');
+      for(const item of layout.items) {
+        assert.ok(item.left>=layout.footer.left-1&&item.right<=layout.footer.right+1&&item.top>=layout.footer.top-1&&item.bottom<=layout.footer.bottom+1, `Clipped footer item: ${JSON.stringify(item)}`);
+      }
+      for(let i=0;i<layout.items.length;i++) for(let j=i+1;j<layout.items.length;j++) {
+        const a=layout.items[i],b=layout.items[j];
+        const intersects=Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1;
+        assert.ok(!intersects, `Overlapping footer items: ${a.name} / ${b.name}`);
+      }
+    };
+    for (const theme of ['light','dark']) {
+      if(await evaluate('document.documentElement.dataset.theme')!==theme) await click('[aria-label="Switch theme"]');
+      for (const [width,height] of [[320,568],[360,640],[375,812],[390,844],[414,896],[600,360],[768,1024],[1440,900]]) {
+        await viewport(width,height,width<=600);
+        await open('profile');
+        const layout=await inspect();
+        fits(layout);
+        assert.equal(layout.display,width<=600?'grid':'flex');
+        assert.equal(layout.encoding,width<=600?'none':'flex');
+        if(width<=600) {
+          const branch=layout.items.find(i=>i.name==='status-branch');
+          const credit=layout.items.find(i=>i.name==='developer-credit');
+          const themeItem=layout.items.find(i=>i.name==='footTheme');
+          assert.ok(credit.left>branch.left&&themeItem.top>=Math.max(branch.bottom,credit.bottom), 'Phone footer has intentional rows');
+          await evaluate("document.querySelector('.status-notice').textContent='Copied a very long file path successfully for the current research record.'");
+          fits(await inspect());
+          await evaluate("document.querySelector('.status-notice').textContent=''");
+        }
+        if([360,390].includes(width)) {
+          const screenshot=await call('Page.captureScreenshot',{format:'webp',quality:95});
+          await fs.writeFile(path.join(output,`footer-${width}-${theme}.webp`),Buffer.from(screenshot.data,'base64'));
+        }
+      }
+      await viewport(320,568,true);
+      await evaluate("document.documentElement.style.fontSize='200%'");
+      fits(await inspect());
+      await evaluate("document.documentElement.style.fontSize=''");
+    }
+    await viewport(1440);
+  });
+
   await test("Every page at 320, 375, 600, 768, 1024 and 1440 widths in both themes", async () => {
     for (const theme of ["light", "dark"]) {
       if (await evaluate("document.documentElement.dataset.theme") !== theme) await click('[aria-label="Switch theme"]');
@@ -420,6 +533,7 @@ try {
     const urls = new Set([portfolio.photoUrl, portfolio.cvUrl]);
     urls.add(await evaluate("document.querySelector('.brand-logo').getAttribute('src')"));
     for (const p of projects) for (const url of [p.image,p.tableImage,...(p.tableImages || []).map(i=>i.src)].filter(Boolean)) urls.add(url);
+    for (const [, , , images = []] of portfolio.experience) for (const image of images) urls.add(image.src);
     for (const c of certificates) for (const url of [c.image,c.demoImage,c.url].filter(Boolean)) if(url.startsWith('/')) urls.add(url);
     const checks = await Promise.all([...urls].map(async url => ({url,response:await fetch(origin+url)})));
     for(const {url,response} of checks) {

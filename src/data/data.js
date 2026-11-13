@@ -48,34 +48,39 @@ export const portfolio = {
       "Grade: Distinction [I] · OGPA: 8.3\n\nActivities and societies:\n• Attended the Science and Science Conference (2022) on Artificial Intelligence vs. Natural Intelligence.",
     ],
     [
-      "",
-      "Higher Secondary · Art/Art Studies, General",
+      "2019–2021",
+      "Higher Secondary",
       "Chakdaha Ramlal Academy",
       "Grade: B+\n\nActivities and societies:\n• Participated in the Inter-School Science Fair (2017), demonstrating interest in science and innovation.\n• Participated in the National Olympiad in Computer and English, showcasing analytical and problem-solving skills.",
     ],
   ],
   building:
     "Developing Java-based backend systems while researching machine learning applications in disaster management, with a focus on UAV-assisted communication networks for post-disaster respons",
+  // Fourth value: images, e.g. [{ src: "/images/experience/gssoc.webp", alt: "GSSoC contribution" }].
   experience: [
     [
       "College project",
       "College Project Team Lead",
       "Led the college project team, coordinated development tasks, and worked with teammates to deliver project milestones.",
+      [],
     ],
     [
       "2024 & 2025",
       "GirlScript Summer of Code",
       "Contributed to community projects by fixing bugs and improving features.",
+      [],
     ],
     [
       "2025",
       "Apertre 3.0",
       "Worked on open-source projects and collaborated with maintainers to deliver improvements.",
+      [],
     ],
     [
       "2025",
       "Hacktoberfest",
       "Submitted pull requests to open-source projects and collaborated with maintainers.",
+      [],
     ],
   ],
   github: "https://github.com/itzsudipta",

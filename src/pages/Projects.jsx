@@ -3,55 +3,7 @@ import { ArrowUpRight } from "lucide-react";
 import { CatalogStatus } from "../components/CatalogStatus";
 import { TechIcon } from "../components/TechIcon";
 import { DetailsTable } from "../components/DetailsTable";
-
-function ProjectGallery({ project }) {
-  const [expanded, setExpanded] = useState(false);
-  const previewLimit = 3;
-
-  const images = project.tableImages?.length
-    ? project.tableImages
-    : project.tableImage
-      ? [{ src: project.tableImage, alt: project.tableImageAlt }]
-      : [];
-
-  if (images.length === 0) return null;
-
-  const hiddenCount = Math.max(0, images.length - previewLimit);
-  const visibleImages = expanded ? images : images.slice(0, previewLimit);
-  const galleryId = `project-gallery-${project.id}`;
-
-  return (
-    <div className="projects-table-photos">
-      <div id={galleryId} className="projects-table-gallery">
-        {visibleImages.map((image, index) => (
-          <img
-            key={image.src}
-            src={image.src}
-            alt={image.alt || `${project.name} screenshot ${index + 1}`}
-            loading="lazy"
-          />
-        ))}
-      </div>
-
-      {hiddenCount > 0 && (
-        <button
-          type="button"
-          className="projects-table-gallery-toggle"
-          aria-controls={galleryId}
-          aria-expanded={expanded}
-          aria-label={
-            expanded
-              ? `Show fewer pictures for ${project.name}`
-              : `Show ${hiddenCount} more pictures for ${project.name}`
-          }
-          onClick={() => setExpanded((previous) => !previous)}
-        >
-          {expanded ? "Show less" : `+${hiddenCount} more`}
-        </button>
-      )}
-    </div>
-  );
-}
+import { ImageGallery } from "../components/ImageGallery";
 export function Projects({ inspect, catalog }) {
   const [tag, set] = useState("All");
   return (
@@ -118,7 +70,17 @@ export function Projects({ inspect, catalog }) {
                     </ul>
                   )}
 
-                  <ProjectGallery project={p} />
+                  <ImageGallery
+                    id={`project-gallery-${p.id}`}
+                    name={p.name}
+                    images={
+                      p.tableImages?.length
+                        ? p.tableImages
+                        : p.tableImage
+                          ? [{ src: p.tableImage, alt: p.tableImageAlt }]
+                          : []
+                    }
+                  />
                 </>
               ),
             }))}

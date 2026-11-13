@@ -37,7 +37,7 @@ export function cv(projects) {
       "",
       ...projects.map((p) => p.name + " — " + p.description),
       "",
-      ...d.experience.map((e) => e.join(" · ")),
+      ...d.experience.map((e) => e.slice(0, 3).join(" · ")),
     ].join("\n"),
   );
 }

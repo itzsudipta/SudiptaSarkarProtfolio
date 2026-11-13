@@ -1,4 +1,5 @@
 import React from "react";
+import { ImageGallery } from "./ImageGallery";
 import "../assets/records.css";
 
 export function RecordPage({ filename, title, entries }) {
@@ -12,7 +13,7 @@ export function RecordPage({ filename, title, entries }) {
       </header>
 
       <ul className="records-list">
-        {entries.map(({ title, subtitle, period, description }) => (
+        {entries.map(({ title, subtitle, period, description, images }) => (
           <li key={`${title}-${period}`}>
             <article className="record-entry">
               <header className="record-entry-heading">
@@ -27,6 +28,7 @@ export function RecordPage({ filename, title, entries }) {
               {description && (
                 <p className="record-description">{description}</p>
               )}
+              <ImageGallery images={images} name={title} />
             </article>
           </li>
         ))}
