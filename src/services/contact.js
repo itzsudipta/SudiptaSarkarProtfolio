@@ -1,20 +1,16 @@
-export async function sendMessage(recipient, fields) {
-  const response = await fetch(
-    "https://formsubmit.co/ajax/" + encodeURIComponent(recipient),
-    {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        ...fields,
-        _subject: "Portfolio enquiry",
-        _replyto: fields.email,
-      }),
-      signal: AbortSignal.timeout(20000),
+const API_URL = import.meta.env.VITE_CONTACT_API_URL;
+
+export async function sendMessage(_recipient, fields) {
+  const response = await fetch(`${API_URL}/contact`, {
+    method: "POST",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
     },
-  );
+    body: JSON.stringify(fields),
+    signal: AbortSignal.timeout(20000),
+  });
+
   let result;
   try {
     result = await response.json();
@@ -25,10 +21,11 @@ export async function sendMessage(recipient, fields) {
     );
     throw new Error("The message service is unavailable. Please try again.");
   }
-  if (!response.ok || ![true, "true"].includes(result?.success)) {
+
+  if (!response.ok) {
     throw new Error(
-      result?.message || "The message service could not accept your message.",
+      result?.error || "The message service could not accept your message.",
     );
   }
-  return result.message || "Message accepted. Thank you for getting in touch.";
+  return result.message || "Message sent. Thank you for getting in touch.";
 }

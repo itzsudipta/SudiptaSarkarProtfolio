@@ -12,6 +12,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  VITE_CONTACT_API_URL: ${{ secrets.VITE_CONTACT_API_URL }}
   AWS_REGION: ap-south-1
   BUILD_DIR: dist # Use "build" for Create React App.
 
