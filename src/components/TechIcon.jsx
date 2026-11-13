@@ -1,5 +1,5 @@
 import React from "react";
-import { SiSpringboot, SiSpringsecurity } from "react-icons/si";
+import { SiNextdotjs, SiSpringboot, SiSpringsecurity, SiSupabase } from "react-icons/si";
 import { Search, BrainCircuit, BookOpen, Scaling, Code2 } from "lucide-react";
 
 const assets = import.meta.glob("../assets/icons/*.svg", {
@@ -17,6 +17,8 @@ const aliases = {
   "Microsoft Copilot": "microsoftcopilot",
 };
 const symbols = {
+  "Next.js": [SiNextdotjs, "currentColor"],
+  Supabase: [SiSupabase, "#3FCF8E"],
   "Spring Boot": [SiSpringboot, "#6DB33F"],
   "Spring Security": [SiSpringsecurity, "#6DB33F"],
   FAISS: [Search, "#4085cc"],

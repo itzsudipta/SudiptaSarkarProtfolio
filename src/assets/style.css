@@ -759,7 +759,9 @@ textarea {
 }
 .terminal {
   height: clamp(132px, 31dvh, 230px);
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-height: 0;
+  overflow: auto;
   background: var(--panel);
   border-top: 1px solid var(--border);
   display: flex;
@@ -2205,8 +2207,8 @@ footer .developer-credit {
 }
 
 .projects-table-stack .tech-mark :is(img, svg) {
-  width: 18px;
-  height: 18px;
+  width: 1.375rem;
+  height: 1.375rem;
   flex-shrink: 0;
 }
 

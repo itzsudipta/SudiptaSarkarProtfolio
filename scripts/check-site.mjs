@@ -5,12 +5,21 @@ import os from "node:os";
 import { spawn } from "node:child_process";
 import { createServer } from "vite";
 import { portfolio } from "../src/data/data.js";
+import React from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { SiNextdotjs, SiSupabase } from "react-icons/si";
 
 // Runs against local source. Contact requests and external-window actions are
 // intercepted in the isolated browser; no messages are sent to the live service.
 const output = path.resolve("test-results/site-check");
 const results = [];
-const filter = process.env.SITE_CHECK_FILTER ? new RegExp(process.env.SITE_CHECK_FILTER) : null;
+const filter = !process.argv.includes('--all') && process.env.SITE_CHECK_FILTER ? new RegExp(process.env.SITE_CHECK_FILTER) : null;
+const responsiveViewports = [
+  [320,568,true],[360,640,true],[375,812,true],[390,844,true],[414,896,true],
+  [568,320,true],[812,375,true],[599,800,true],[600,800,true],[601,800,true],
+  [768,1024,true],[800,900,true],[801,900,false],[1024,768,false],
+  [1280,800,false],[1440,900,false],[1920,1080,false],
+];
 let retainedChecks = 0;
 if (filter) {
   try {
@@ -242,6 +251,42 @@ try {
     await evaluate("Array.from(document.querySelectorAll('.filters button')).find(b=>b.textContent==='All').click()");
   });
 
+  await test("Projects tech icons are larger and Next.js/Supabase logos render in both themes", async () => {
+    const expected = new Map([
+      ['Next.js',renderToStaticMarkup(React.createElement(SiNextdotjs)).match(/<path d="([^"]+)"/)[1]],
+      ['Supabase',renderToStaticMarkup(React.createElement(SiSupabase)).match(/<path d="([^"]+)"/)[1]],
+    ]);
+    for(const theme of ['light','dark']) {
+      if(await evaluate('document.documentElement.dataset.theme')!==theme)await click('[aria-label="Switch theme"]');
+      for(const width of [320,375,600,768,1440]) {
+        await viewport(width,900,width<=600);
+        await open('projects');
+        for(const [name,shape] of expected) {
+          const selector=`.projects-table-stack .tech-mark[title="${name}"]`;
+          const icon=await evaluate(`(() => {
+            const mark=document.querySelector(${JSON.stringify(selector)});
+            const svg=mark?.querySelector('svg');
+            if(!svg)return null;
+            const box=svg.getBoundingClientRect();
+            const page=document.querySelector('.fileview:not([hidden])');
+            return {path:svg.querySelector('path')?.getAttribute('d'),width:box.width,height:box.height,color:getComputedStyle(svg).color,inheritedColor:getComputedStyle(mark).color,overflow:page.scrollWidth>page.clientWidth+1};
+          })()`);
+          assert.ok(icon,`${name} logo exists`);
+          assert.equal(icon.path,shape,`${name} uses its brand logo rather than a generic symbol`);
+          assert.equal(icon.width,22);assert.equal(icon.height,22);
+          assert.equal(icon.overflow,false);
+          assert.equal(icon.color,name==='Supabase'?'rgb(63, 207, 142)':icon.inheritedColor);
+        }
+        if(width===375) {
+          await evaluate("document.querySelector('#fabricanova').scrollIntoView({block:'start'})");
+          const screenshot=await call('Page.captureScreenshot',{format:'webp',quality:95});
+          await fs.writeFile(path.join(output,`project-icons-${width}-${theme}.webp`),Buffer.from(screenshot.data,'base64'));
+        }
+      }
+    }
+    await viewport(1440);
+  });
+
   await test("Experience image galleries, independent expansion and responsive sizing", async () => {
     await open('experience');
     assert.equal(await evaluate("document.querySelectorAll('.fileview:not([hidden]) .image-gallery').length"), 0, 'Empty image lists do not show placeholder galleries');
@@ -464,11 +509,11 @@ try {
     await viewport(1440);
   });
 
-  await test("Every page at 320, 375, 600, 768, 1024 and 1440 widths in both themes", async () => {
+  await test("Every page across 17 phone/tablet/desktop viewports and both themes", async () => {
     for (const theme of ["light", "dark"]) {
       if (await evaluate("document.documentElement.dataset.theme") !== theme) await click('[aria-label="Switch theme"]');
-      for (const width of [320, 375, 600, 768, 1024, 1440]) {
-        await viewport(width);
+      for (const [width,height,mobile] of responsiveViewports) {
+        await viewport(width,height,mobile);
         for (const id of Object.keys(portfolio.files)) {
           await open(id);
           const measurements = await evaluate(`(() => {
@@ -477,6 +522,13 @@ try {
           })()`);
           assert.ok(measurements.body <= width + 1 && measurements.page <= measurements.available + 1 && measurements.editor <= measurements.editorWidth + 1, `${id} at ${width}/${theme}: ${JSON.stringify(measurements)}`);
         }
+        const chrome=await evaluate(`(() => {
+          const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};};
+          const visible=el=>getComputedStyle(el).display!=='none'&&el.getBoundingClientRect().width>0;
+          return {title:rect(document.querySelector('.titlebar')),toolbar:rect(document.querySelector('.toolbar')),footer:rect(document.querySelector('.statusbar')),width:innerWidth,height:innerHeight,controls:Array.from(document.querySelectorAll('.brand-name,.title-actions,.titlebar .mobilemenu,.titlebar nav:not(.show),.toolbar .run,.toolbar .gh')).filter(visible).map(el=>({name:el.className,...rect(el)}))};
+        })()`);
+        for(const control of chrome.controls) assert.ok(control.left>=-1&&control.right<=chrome.width+1,`Header control outside viewport at ${width}/${theme}: ${JSON.stringify(control)}`);
+        for(const key of ['title','toolbar','footer'])assert.ok(chrome[key].top>=-1&&chrome[key].bottom<=chrome.height+1,`${key} outside viewport at ${width}x${height}/${theme}`);
         if (width >= 1024) {
           await click('[aria-label="Toggle project panel"]');
           for (const id of ["projects", "research", "academics"]) {
@@ -492,6 +544,63 @@ try {
         }
       }
     }
+  });
+
+  await test("Header controls do not overlap at navigation breakpoints", async () => {
+    for(const theme of ['light','dark']) {
+      if(await evaluate('document.documentElement.dataset.theme')!==theme)await click('[aria-label="Switch theme"]');
+      for(const width of [320,599,600,601,640,680,768,800,801,1024,1440]) {
+        await viewport(width,800,width<=800);
+        await open('profile');
+        const controls=await evaluate(`Array.from(document.querySelectorAll('.brand-logo,.brand-name,.title-actions,.titlebar .mobilemenu,.titlebar nav:not(.show)')).filter(el=>getComputedStyle(el).display!=='none').map(el=>{const r=el.getBoundingClientRect();return {name:el.className,left:r.left,right:r.right,top:r.top,bottom:r.bottom};})`);
+        for(let i=0;i<controls.length;i++)for(let j=i+1;j<controls.length;j++) {
+          const a=controls[i],b=controls[j];
+          assert.ok(!(Math.min(a.right,b.right)-Math.max(a.left,b.left)>1&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>1),`Header collision at ${width}/${theme}: ${a.name} and ${b.name}`);
+        }
+      }
+    }
+    await viewport(1440);
+  });
+
+  await test("Dialogs, menus, contact fields and terminal fit phone and landscape viewports", async () => {
+    const assertBounds = async (selector, description) => {
+      const box=await evaluate(`(() => {const el=document.querySelector(${JSON.stringify(selector)});if(!el)return null;const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:innerWidth,height:innerHeight,overflow:el.scrollWidth>el.clientWidth+1};})()`);
+      assert.ok(box,description);
+      assert.ok(box.left>=-1&&box.right<=box.width+1&&box.top>=-1&&box.bottom<=box.height+1&&!box.overflow,`${description}: ${JSON.stringify(box)}`);
+    };
+    for(const [width,height,mobile] of [[320,568,true],[390,400,true],[568,320,true],[812,375,true],[768,1024,true],[1440,900,false]]) {
+      await viewport(width,height,mobile);
+      await open('profile');
+      await click('[aria-label="Search Everywhere"]');
+      await fill('[aria-label="Search files"]','UAV');
+      await assertBounds('dialog[open]',`Search dialog at ${width}x${height}`);
+      await click('[aria-label="Close dialog"]');
+      await menu('Navigate');
+      await assertBounds(width<=600?'.titlebar nav.show':'.dropdown',`Navigation menu at ${width}x${height}`);
+      await evaluate("window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape'}))");
+      await open('certificates');
+      await until("document.querySelector('.cert-photo')",'Certificate preview ready');
+      await click('.certificate-card .cert-photo');
+      await assertBounds('.cert-viewer[open]',`Certificate viewer at ${width}x${height}`);
+      await click('.cert-viewer[open] [aria-label="Close certificate"]');
+      await open('contact');
+      const fields=await evaluate("Array.from(document.querySelectorAll('.contact input,.contact textarea,.contact button')).map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,width:innerWidth};})");
+      for(const field of fields)assert.ok(field.left>=0&&field.right<=field.width+1,`Contact field overflow at ${width}`);
+      await click('[aria-label="Terminal"]');
+      await assertBounds('.terminal',`Terminal at ${width}x${height}`);
+      const terminal=await evaluate("({bottom:document.querySelector('.terminal').getBoundingClientRect().bottom,rail:document.querySelector('.rail').getBoundingClientRect().top,footer:document.querySelector('.statusbar').getBoundingClientRect().top})");
+      assert.ok(terminal.bottom<=(width<=600?terminal.rail:terminal.footer)+1,`Terminal overlaps bottom controls at ${width}x${height}: ${JSON.stringify(terminal)}`);
+      await evaluate("document.querySelector('[aria-label=\"Terminal command\"]').focus();document.querySelector('.terminal form').scrollIntoView({block:'nearest'})");
+      await fill('[aria-label="Terminal command"]','help');
+      await evaluate("document.querySelector('.terminal form').requestSubmit()");
+      await until("document.querySelector('.terminal .history').textContent.includes('open <file>')",'Terminal command works at short heights');
+      if(width===568) {
+        const screenshot=await call('Page.captureScreenshot',{format:'webp',quality:95});
+        await fs.writeFile(path.join(output,'landscape-terminal-568.webp'),Buffer.from(screenshot.data,'base64'));
+      }
+      await click('[title="Close terminal"]');
+    }
+    await viewport(1440);
   });
 
   await test("Mobile application menus and dismissible project drawer", async () => {
@@ -565,7 +674,7 @@ try {
   console.error(error);
 } finally {
   await fs.mkdir(output, { recursive: true });
-  await fs.writeFile(path.join(output, "report.json"), JSON.stringify({ checkedAt: new Date().toISOString(), ...(filter ? { rerunFilter: filter.source, retainedChecks } : {}), results }, null, 2));
+  await fs.writeFile(path.join(output, "report.json"), JSON.stringify({ checkedAt: new Date().toISOString(), responsiveViewports, ...(filter ? { rerunFilter: filter.source, retainedChecks } : {}), results }, null, 2));
   if (socket?.readyState === WebSocket.OPEN) { try { await call("Browser.close", {}, undefined); } catch {} socket.close(); }
   browser?.kill();
   await server?.close();
