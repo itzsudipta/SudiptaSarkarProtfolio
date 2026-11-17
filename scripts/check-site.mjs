@@ -15,7 +15,7 @@ const output = path.resolve("test-results/site-check");
 const results = [];
 const filter = !process.argv.includes('--all') && process.env.SITE_CHECK_FILTER ? new RegExp(process.env.SITE_CHECK_FILTER) : null;
 const responsiveViewports = [
-  [320,568,true],[360,640,true],[375,812,true],[390,844,true],[414,896,true],
+  [320,568,true],[326,726,true],[360,640,true],[375,812,true],[390,844,true],[414,896,true],[536,726,true],
   [568,320,true],[812,375,true],[599,800,true],[600,800,true],[601,800,true],
   [768,1024,true],[800,900,true],[801,900,false],[1024,768,false],
   [1280,800,false],[1440,900,false],[1920,1080,false],
@@ -150,7 +150,7 @@ try {
     window.__realFetch = window.fetch.bind(window);
     window.__contactMode = 'success'; window.__contactCalls = 0;
     window.fetch = (url, options) => {
-      if (String(url).startsWith('https://formsubmit.co/')) {
+      if (String(url).startsWith('https://formsubmit.co/') || (options?.method === 'POST' && String(url).endsWith('/contact'))) {
         window.__contactCalls++;
         window.__contactPayload = JSON.parse(options.body);
         if (window.__contactMode === 'error') return Promise.reject(new TypeError('Failed to fetch'));
@@ -509,7 +509,106 @@ try {
     await viewport(1440);
   });
 
-  await test("Every page across 17 phone/tablet/desktop viewports and both themes", async () => {
+  await test("Editor line numbers stop at content and line/column tracking adapts to phone widths", async () => {
+    const inspect = () => evaluate(`(() => {
+      const editor=document.querySelector('.editor'), view=editor.querySelector('.fileview:not([hidden])');
+      const gutter=editor.querySelector('.gutter');
+      const rect=el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height};};
+      const spans=Array.from(gutter.children), lh=parseFloat(getComputedStyle(gutter).lineHeight);
+      const glyphs=spans.map(el=>{const r=document.createRange();r.selectNodeContents(el);return rect(r);});
+      return {numbers:spans.map(s=>Number(s.textContent)),expected:1+Math.floor(view.getBoundingClientRect().height/lh),lineHeight:lh,
+        gutter:rect(gutter),view:rect(view),glyphs,editor:rect(editor),footer:rect(document.querySelector('.statusbar')),
+        scrollTop:editor.scrollTop,firstComment:rect(view.querySelector('.comment')),
+        scrollWidth:editor.scrollWidth,clientWidth:editor.clientWidth,viewport:innerWidth,viewportHeight:innerHeight,
+        position:document.querySelector('.status-position').textContent};
+    })()`);
+    const assertGutter = (layout, context) => {
+      assert.equal(layout.numbers.length, layout.expected, `Content-dependent count: ${context}`);
+      assert.deepEqual(layout.numbers, Array.from({length:layout.expected}, (_,i)=>i+1), `Continuous numbering: ${context}`);
+      assert.ok(Math.abs(layout.view.top-layout.gutter.top-layout.lineHeight)<1, `Content begins on line 2: ${context}`);
+      assert.ok(Math.abs(layout.firstComment.top-layout.view.top)<1, `First page row aligns with line 2: ${context}`);
+      if(layout.scrollTop===0) assert.ok(Math.abs(layout.gutter.top-layout.editor.top)<1, `Line 1 stays directly below tabs: ${context}`);
+      assert.ok(layout.gutter.bottom<=layout.view.bottom+1, `Gutter stops at content: ${context}`);
+      for(const glyph of layout.glyphs) {
+        assert.ok(glyph.left>=layout.gutter.left-0.5&&glyph.right<=layout.gutter.right+0.5, `Number fits the gutter: ${context}`);
+        assert.ok(glyph.bottom<=layout.view.bottom+1, `Number stays above content end: ${context}`);
+      }
+      assert.ok(layout.scrollWidth<=layout.clientWidth+1, `No horizontal editor overflow: ${context}`);
+      const [,line,column]=layout.position.match(/Ln (\d+), Col (\d+)/);
+      assert.ok(Number(line)>=1&&Number(line)<=layout.expected&&Number(column)>=1, `Bounded position: ${context}`);
+      assert.ok(layout.footer.bottom<=layout.viewportHeight+1, `Footer remains in viewport: ${context}`);
+    };
+    for(const theme of ['light','dark']) {
+      if(await evaluate('document.documentElement.dataset.theme')!==theme) await click('[aria-label="Switch theme"]');
+      for(const width of [536,326,320,375,768,1440]) {
+        await viewport(width,726,width<=768);
+        await open('contact');
+        for(const id of Object.keys(portfolio.files)) {
+          await open(id);
+          await pause(150);
+          assertGutter(await inspect(), `${id}, ${width}, ${theme}, top`);
+          assert.equal(await evaluate("document.querySelector('.status-position').textContent"), 'Ln 1, Col 1', 'Changing files resets the position');
+          await evaluate("document.querySelector('.editor').scrollTo(0,document.querySelector('.editor').scrollHeight)");
+          await pause(50);
+          const bottom=await inspect();
+          assertGutter(bottom, `${id}, ${width}, ${theme}, bottom`);
+        }
+        await open('profile');
+        await pause(150);
+        await evaluate(`(() => {
+          const node=document.querySelector('.fileview:not([hidden]) .comment').firstChild;
+          window.getSelection().setPosition(node,5);
+        })()`);
+        await until("document.querySelector('.status-position').textContent==='Ln 2, Col 6'", 'selection updates the actual line and column');
+        assertGutter(await inspect(), `selected column, ${width}, ${theme}`);
+        const wrappedPosition=await evaluate(`(() => {
+          const view=document.querySelector('.fileview:not([hidden])'), node=view.querySelector('.identity p').firstChild;
+          const range=document.createRange();range.setStart(node,0);range.setEnd(node,1);
+          const firstTop=range.getBoundingClientRect().top;
+          for(let i=1;i<node.length-1;i++) {
+            range.setStart(node,i);range.setEnd(node,i+1);
+            const rect=range.getBoundingClientRect();
+            if(rect.width>0&&rect.top>firstTop+1) {
+              window.getSelection().setPosition(node,i+1);
+              range.setStart(node,i+1);range.collapse(true);
+              const caret=range.getBoundingClientRect(), gutter=document.querySelector('.gutter');
+              return 'Ln '+(1+Math.floor(((caret.top+caret.bottom)/2-gutter.getBoundingClientRect().top)/parseFloat(getComputedStyle(gutter).lineHeight)))+', Col 2';
+            }
+          }
+          throw new Error('The profile paragraph should wrap at this width');
+        })()`);
+        await until(`document.querySelector('.status-position').textContent===${JSON.stringify(wrappedPosition)}`, 'wrapped text column starts at the rendered row');
+        if([536,326].includes(width)) {
+          const screenshot=await call('Page.captureScreenshot',{format:'webp',quality:95});
+          await fs.writeFile(path.join(output,`editor-lines-${width}-${theme}.webp`),Buffer.from(screenshot.data,'base64'));
+        }
+      }
+    }
+    await viewport(326,726,true);
+    await open('projects');
+    const toggle='.fileview:not([hidden]) .image-gallery-toggle';
+    await until(`document.querySelector(${JSON.stringify(toggle)})`, 'gallery ready');
+    const original=(await inspect()).expected;
+    await click(toggle);
+    await until(`document.querySelectorAll('.gutter span').length>${original}`, 'gutter grows when gallery expands');
+    assertGutter(await inspect(), 'expanded gallery');
+    await click(toggle);
+    await until(`document.querySelectorAll('.gutter span').length===${original}`, 'gutter shrinks when gallery collapses');
+
+    await open('contact');
+    await fill('input[name=name]', 'Sudipta Sarkar');
+    await evaluate(`(() => {const field=document.querySelector('input[name=name]');field.focus();field.setSelectionRange(4,4);field.dispatchEvent(new Event('select',{bubbles:true}));})()`);
+    await until("document.querySelector('.status-position').textContent.endsWith('Col 5')", 'input caret updates column');
+    await fill('textarea[name=message]', 'First line\nSecond line');
+    await evaluate(`(() => {const field=document.querySelector('textarea[name=message]');field.focus();field.setSelectionRange(14,14);field.dispatchEvent(new Event('select',{bubbles:true}));})()`);
+    await until("document.querySelector('.status-position').textContent.endsWith('Col 4')", 'multiline input column resets after newline');
+    assertGutter(await inspect(), 'contact input caret');
+    await evaluate("document.activeElement.blur();window.getSelection().removeAllRanges()");
+    await open('profile');
+    await viewport(1440);
+  });
+
+  await test("Every page across 19 phone/tablet/desktop viewports and both themes", async () => {
     for (const theme of ["light", "dark"]) {
       if (await evaluate("document.documentElement.dataset.theme") !== theme) await click('[aria-label="Switch theme"]');
       for (const [width,height,mobile] of responsiveViewports) {

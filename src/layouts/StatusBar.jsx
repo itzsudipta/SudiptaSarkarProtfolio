@@ -2,7 +2,7 @@ import React from "react";
 import { GitBranch } from "lucide-react";
 import { portfolio as d } from "../data/data";
 
-export function StatusBar({ active, notice, line, light }) {
+export function StatusBar({ active, notice, line, column, light }) {
   return (
     <footer className="statusbar" aria-label="Workspace status">
       <span className="status-branch">
@@ -16,7 +16,7 @@ export function StatusBar({ active, notice, line, light }) {
       <div className="status-spacer flex-1" />
       <span className="developer-credit">{d.developerCredit}</span>
       <span className="status-notice" role="status">{notice}</span>
-      <span className="status-position">Ln {line}, Col 1</span>
+      <span className="status-position">Ln {line}, Col {column}</span>
       <span className="status-encoding">UTF-8</span>
       <span className="footTheme">
         <span className="lightdot" />

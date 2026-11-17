@@ -27,6 +27,7 @@ import { Certificates } from "./pages/Certificates";
 import { Contact } from "./pages/Contact";
 
 import { useCatalog } from "./services/catalogs";
+import { useEditorPosition } from "./hooks/useEditorPosition";
 
 export default function App() {
   const projects = useCatalog("projects");
@@ -46,11 +47,11 @@ export default function App() {
     ),
     [marks, setMarks] = useState([]),
     [windowState, setWindow] = useState("normal"),
-    [line, setLine] = useState(1),
     [notice, setNotice] = useState("");
   const shiftAt = useRef(0),
     dragged = useRef(null),
     scroll = useRef();
+  const { gutter, line, column } = useEditorPosition(scroll, active);
   const theme = () => {
     const v = !light;
     setLight(v);
@@ -183,7 +184,6 @@ export default function App() {
       .getElementById("tab-" + active)
       ?.parentElement?.scrollIntoView({ inline: "nearest", block: "nearest" });
     scroll.current?.scrollTo(0, 0);
-    setLine(1);
   }, [active]);
   useEffect(() => {
     const key = (e) => {
@@ -363,9 +363,6 @@ export default function App() {
           <div
             className="editor"
             ref={scroll}
-            onScroll={(e) =>
-              setLine(1 + Math.floor(e.currentTarget.scrollTop / 25))
-            }
             role={active ? "tabpanel" : "region"}
             aria-label={active ? undefined : "File chooser"}
             id="editor"
@@ -373,8 +370,12 @@ export default function App() {
           >
             <div className="sheet">
               {active && (
-                <div aria-hidden="true" className="gutter">
-                  {Array.from({ length: 90 }, (_, i) => (
+                <div
+                  aria-hidden="true"
+                  className="gutter"
+                  style={{ top: gutter.top, height: gutter.height }}
+                >
+                  {Array.from({ length: gutter.count }, (_, i) => (
                     <span key={i}>{i + 1}</span>
                   ))}
                 </div>
@@ -396,7 +397,7 @@ export default function App() {
           )}
         </main>
       </div>
-      <StatusBar active={active} notice={notice} line={line} light={light} />
+      <StatusBar active={active} notice={notice} line={line} column={column} light={light} />
       {modal && (
         <WorkspaceDialog
           kind={modal}
