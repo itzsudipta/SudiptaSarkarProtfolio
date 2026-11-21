@@ -1,67 +1,85 @@
 [
   {
     "id": "niriksha",
-    "name": "Niriksha",
+    "name": "NIRIKSHA: AI-Powered TOF Drone System",
     "kind": "AI / DRONE PERCEPTION",
-    "description": "The AI-Powered TOF Drone System is a cutting-edge research and development project focused on enhancing drone perception and analytics. Leveraging advanced computer vision models like YOLOv8 combined with Ensemble Learning, this system pushes the boundaries of object detection and spatial awareness.",
-    "tags": ["HTML5","CSS3","YOLOv8", "Python", "Flask"],
+    "description": "NIRIKSHA improves object detection and spatial awareness for Time-of-Flight (TOF) drones.",
+    "highlights": [
+      { "label": "Model training", "text": "The team trained and optimized YOLOv8 models in Google Colab. Combining their predictions in an ensemble reached 84% accuracy in testing." },
+      { "label": "Dashboard and demos", "text": "Flask handles routing and serves predictions through its API. A custom HTML, CSS, and JavaScript dashboard displays the drone data. ngrok exposes the local server for temporary demos." },
+      { "label": "Team", "text": "HalfBaked Engineers built NIRIKSHA for Hack-o-NiT. The team included Sudipta Sarkar, Rupanjana Majhi, Krishenendu Roy, and Avirup Guha Biswas." }
+    ],
+    "tags": ["YOLOv8", "Google Colab", "Python", "Flask", "HTML5", "CSS3", "JavaScript", "ngrok"],
     "art": "graph",
     "github": "https://github.com/itzsudipta/NIRIKSHA-Ai-Powered-TOF-Drone-System",
     "live": "https://d3njt5ezx655xk.cloudfront.net",
     "featured": true,
-    "image": "/images/projects/Niriksha.webp",
+    "image": "/images/projects/niriksha/Niriksha.webp",
     "tableImages": [
       {
-        "src": "/images/projects/Niriksha.webp",
-        "alt": "Niriksha project preview"
-      },
-      {
-        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_.webp",
-        "alt": "Niriksha screenshot 1"
+        "src": "/images/projects/niriksha/Niriksha.webp",
+        "alt": "NIRIKSHA project preview"
       },
       {
         "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(1).webp",
         "alt": "Niriksha screenshot 2"
       },
       {
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(3).webp",
+        "alt": "Niriksha screenshot 4"
+      },
+      {
         "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(2).webp",
         "alt": "Niriksha screenshot 3"
       },
       {
-        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_%20(3).webp",
-        "alt": "Niriksha screenshot 4"
+        "src": "/images/projects/niriksha/6835-34-90-85-50.ngrok-free.app_.webp",
+        "alt": "Niriksha screenshot 1"
       }
     ]
   },
   {
-    "id": "filetracker",
-    "name": "FileTracker",
+    "id": "filestacker",
+    "name": "FileStacker",
     "kind": "FILE MANAGEMENT",
-    "description": "FileTracker is a modern file management web app with a FastAPI backend and a React + Vite frontend. It supports secure authentication, file upload, download, and organization for users and organizations.",
-    "detail": "The file-management dashboard brings uploads, search, tags, and file details into one view.",
-    "tags": ["React", "TypeScript" , "Python" , "AWS"] ,
+    "description": "FileStacker is a full-stack web app for managing files. It stores uploads in Amazon S3 and provides access through short-lived presigned URLs.",
+    "highlights": [
+      { "label": "Frontend", "text": "React 19 provides the file dashboard and sign-in screens. TypeScript 5.9 types components and API responses, Vite 7 handles builds, and Tailwind CSS 4 provides styling." },
+      { "label": "API and database", "text": "The Java 21 backend exposes a REST API with Spring Boot 3.3. Spring Data JPA persists file metadata, users, organizations, and application records in PostgreSQL. Apache Maven manages dependencies and packaging." },
+      { "label": "Authentication", "text": "Supabase Auth handles registration, sign-in, and session refresh." }
+    ],
+    "tags": ["React", "TypeScript", "Vite", "Tailwind CSS", "Java", "Spring Boot", "Spring Data JPA", "Apache Maven", "PostgreSQL", "Supabase Auth", "Amazon S3"],
     "art": "database",
     "github": "https://github.com/itzsudipta/FileTracker",
     "live": "",
     "featured": true,
-    "image": "/images/projects/fileTracker/image.webp",
+    "image": "/images/projects/fileStacker/Screenshot%202026-11-21%20222755.webp",
     "tableImages": [
       {
-        "src": "/images/projects/fileTracker/image.webp",
-        "alt": "FileTracker project preview"
+        "src": "/images/projects/fileStacker/Screenshot%202026-11-21%20222755.webp",
+        "alt": "FileStacker screenshot 1"
+      },
+      {
+        "src": "/images/projects/fileStacker/Screenshot%202026-11-21%20230951.webp",
+        "alt": "FileStacker screenshot 2"
       }
     ]
   },
   {
     "id": "fabricanova",
-    "name": "Fabricanova",
+    "name": "Fabricanova: Reinventing Style with AI",
     "kind": "AI / FASHION",
-    "description": "Fabricanova is an AI-powered platform for fashion designers, blending generative AI, technical sketching, and collaborative tools. Built with Next.js, React, and Python, it enables users to create, visualize, and iterate on garment designs from concept to technical vector sketches.",
-    "tags": ["Next.js" , "Python" , "Supabase"],
+    "description": "Fabricanova is a full-stack AI fashion design platform that combines retrieval-augmented generation (RAG), the Gemma 2B language model, and a custom GAN.",
+    "tags": ["HTML5", "CSS3", "JavaScript", "Python", "Flask", "Supabase", "PostgreSQL", "Google OAuth", "Row Level Security", "RAG", "LangChain", "Hugging Face", "FAISS", "Gemma 2B", "Custom GAN", "Pillow", "Transformers"],
     "art": "fabric",
     "github": "",
     "live": "https://fabricanova.vercel.app/",
-    "detail": "Semantic search selects a product image and metadata. Gemma drafts a design description and Swin2SR enlarges the visual reference.",
+    "highlights": [
+      { "label": "Design workspace", "text": "A Python Flask backend serves AI features to a responsive glassmorphism dashboard built with HTML, CSS, and JavaScript. Users can preview and edit designs and save and organize their projects." },
+      { "label": "Image retrieval", "text": "FAISS searches the Transformersx/fashion-product-images-small dataset for relevant product images." },
+      { "label": "Sign-in and data access", "text": "The app uses Google OAuth for sign-in. Its README lists Row Level Security to restrict access to each user's own data, along with encryption and GDPR compliance." },
+      { "label": "Testing", "text": "The project uses manual test pages, API scripts, and integration tests." }
+    ],
     "featured": true,
     "image": "/images/projects/fabricanova/fabricanova.webp",
     "tableImages": [

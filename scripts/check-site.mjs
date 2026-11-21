@@ -7,7 +7,7 @@ import { createServer } from "vite";
 import { portfolio } from "../src/data/data.js";
 import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { SiNextdotjs, SiSupabase } from "react-icons/si";
+import { SiSupabase, SiVite } from "react-icons/si";
 
 // Runs against local source. Contact requests and external-window actions are
 // intercepted in the isolated browser; no messages are sent to the live service.
@@ -225,11 +225,18 @@ try {
     await until("document.activeElement.id === 'patent-tof'", "research search focus");
   });
 
-  await test("Project filters, galleries, GitHub and live links", async () => {
+  await test("All projects are visible with WebP galleries, GitHub and live links", async () => {
     await open("projects");
     await until("document.querySelectorAll('.projects-table tbody tr').length === 3", "project rows");
     const projects = await (await fetch(origin + "/data/projects.json")).json();
+    assert.equal(await evaluate("document.querySelectorAll('.projects-page .filters').length"), 0);
+    assert.deepEqual(
+      await evaluate("Array.from(document.querySelectorAll('.projects-table-name'), button => button.textContent)"),
+      projects.map(({ name }) => name),
+    );
     for (const project of projects) {
+      assert.match(project.image, /\.webp$/i);
+      project.tableImages.forEach(({ src }) => assert.match(src, /\.webp$/i));
       const gallery = `#project-gallery-${project.id}`;
       assert.equal(await evaluate(`document.querySelectorAll('${gallery} img').length`), Math.min(3, project.tableImages.length));
       if (project.tableImages.length > 3) {
@@ -243,17 +250,11 @@ try {
         assert.equal(await evaluate("window.__opened.at(-1)"), project.github || project.live);
       }
     }
-    await click('#niriksha .projects-table-name');
-    assert.equal(await evaluate("window.__opened.at(-1)"), projects[0].github);
-    await evaluate("Array.from(document.querySelectorAll('.filters button')).find(b=>b.textContent==='Supabase').click()");
-    await pause(100);
-    assert.equal(await evaluate("document.querySelectorAll('.projects-table tbody tr').length"), 1);
-    await evaluate("Array.from(document.querySelectorAll('.filters button')).find(b=>b.textContent==='All').click()");
   });
 
-  await test("Projects tech icons are larger and Next.js/Supabase logos render in both themes", async () => {
+  await test("Projects tech icons are larger and Vite/Supabase logos render in both themes", async () => {
     const expected = new Map([
-      ['Next.js',renderToStaticMarkup(React.createElement(SiNextdotjs)).match(/<path d="([^"]+)"/)[1]],
+      ['Vite',renderToStaticMarkup(React.createElement(SiVite)).match(/<path d="([^"]+)"/)[1]],
       ['Supabase',renderToStaticMarkup(React.createElement(SiSupabase)).match(/<path d="([^"]+)"/)[1]],
     ]);
     for(const theme of ['light','dark']) {
@@ -275,7 +276,7 @@ try {
           assert.equal(icon.path,shape,`${name} uses its brand logo rather than a generic symbol`);
           assert.equal(icon.width,22);assert.equal(icon.height,22);
           assert.equal(icon.overflow,false);
-          assert.equal(icon.color,name==='Supabase'?'rgb(63, 207, 142)':icon.inheritedColor);
+          assert.equal(icon.color,name==='Supabase'?'rgb(63, 207, 142)':'rgb(139, 92, 246)');
         }
         if(width===375) {
           await evaluate("document.querySelector('#fabricanova').scrollIntoView({block:'start'})");
@@ -285,6 +286,50 @@ try {
       }
     }
     await viewport(1440);
+  });
+
+  await test("Projects highlights, cells and screenshots fit the editor width", async () => {
+    const projects = await (await fetch(origin + "/data/projects.json")).json();
+    const fileStacker = projects.find(({ id }) => id === "filestacker");
+    assert.equal(fileStacker.tableImages.length, 2);
+    assert.equal(fileStacker.image, fileStacker.tableImages[0].src);
+    assert.ok(fileStacker.tableImages.every(({ src }) => !src.endsWith("/image.webp")));
+
+    await open("projects");
+    await until("document.querySelectorAll('.projects-table tbody tr').length === 3", "project rows");
+    assert.deepEqual(
+      await evaluate("Array.from(document.querySelectorAll('.projects-table-highlights strong'), heading => heading.textContent)"),
+      projects.flatMap(({ highlights }) => highlights.map(({ label }) => label)),
+    );
+
+    for (const width of [320, 375, 600, 800, 1024, 1440]) {
+      await viewport(width, 900, width <= 600);
+      const layout = await evaluate(`(() => {
+        const page = document.querySelector('.projects-page');
+        const table = page.querySelector('table');
+        const rows = [...table.tBodies[0].rows];
+        const inside = (item, parent) => {
+          const child = item.getBoundingClientRect();
+          const outer = parent.getBoundingClientRect();
+          return child.left >= outer.left - 1 && child.right <= outer.right + 1;
+        };
+        const compact = page.clientWidth <= 672;
+        const cellsFit = rows.every(row => {
+          const [heading, details] = row.cells;
+          const title = heading.getBoundingClientRect();
+          const content = details.getBoundingClientRect();
+          const positioned = compact ? content.top >= title.bottom - 1 : content.left >= title.right - 1;
+          return positioned && [heading, details].every(cell =>
+            inside(cell, row) && cell.scrollWidth <= cell.clientWidth + 1
+          );
+        });
+        const imagesFit = [...table.querySelectorAll('.image-gallery-items img')].every(image =>
+          inside(image, image.parentElement.closest('td'))
+        );
+        return { tableFits: inside(table, page), cellsFit, imagesFit };
+      })()`);
+      assert.deepEqual(layout, { tableFits: true, cellsFit: true, imagesFit: true }, `Projects at ${width}px`);
+    }
   });
 
   await test("Experience image galleries, independent expansion and responsive sizing", async () => {

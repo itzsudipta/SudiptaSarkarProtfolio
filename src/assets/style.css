@@ -238,7 +238,6 @@ footer i {
 .treebtn,
 footer,
 .terminal,
-.filters,
 .record small,
 kbd {
   font-family: var(--mono);
@@ -394,7 +393,6 @@ main {
 }
 .tab,
 .tab > button:first-child,
-.filters,
 .tags {
   display: flex;
   align-items: center;
@@ -653,33 +651,18 @@ main {
   color: var(--muted);
   margin-bottom: 13px;
 }
-.tags,
-.filters {
+.tags {
   gap: 5px;
   flex-wrap: wrap;
-}
-.tags {
   margin-top: auto;
 }
-.tags span,
-.filters button {
+.tags span {
   background: var(--raised);
   border: 1px solid var(--border);
   border-radius: 4px;
   font-size: 10px;
   color: var(--muted);
   padding: 2px 6px;
-}
-.filters {
-  margin: 18px 0;
-}
-.filters button {
-  font-size: 12px;
-  padding: 5px 9px;
-}
-.filters .selected {
-  color: var(--green);
-  background: var(--select);
 }
 footer {
   height: 25px;
@@ -1365,7 +1348,6 @@ dialog::backdrop {
   .content {
     padding: 20px 14px;
   }
-  .filters button,
   .primary,
   .secondary {
     min-height: 38px;
@@ -2104,8 +2086,8 @@ footer .developer-credit {
   .toolbar .run span,.toolbar .gh span {display:inline}
 }
 
-.projects-table {
-  --project-photo-width: 30%;
+.projects-page {
+  container: projects-page / inline-size;
 }
 
 .details-table {
@@ -2139,12 +2121,32 @@ footer .developer-credit {
   vertical-align: middle;
 }
 
+.details-table.projects-table {
+  --project-photo-width: 30%;
+  table-layout: auto;
+}
+
+.projects-table :is(thead th:first-child, th[scope="row"]) {
+  text-align: left;
+}
+
+.projects-table thead th:first-child {
+  width: 22%;
+}
+
+.projects-table th[scope="row"] {
+  background: var(--panel);
+  vertical-align: top;
+}
+
 .projects-table-name {
   max-width: 100%;
   padding: 0;
   color: var(--green);
   font: inherit;
-  text-align: center;
+  line-height: 1.45;
+  text-align: left;
+  text-wrap: balance;
   overflow-wrap: anywhere;
   cursor: pointer;
 }
@@ -2154,7 +2156,35 @@ footer .developer-credit {
 }
 
 .projects-table td p {
+  max-width: 76ch;
   margin: 0;
+  line-height: 1.6;
+}
+
+.projects-table td p + p {
+  margin-top: 8px;
+}
+
+.projects-table-highlights {
+  display: grid;
+  gap: 8px;
+  max-width: 76ch;
+  margin: 12px 0 0;
+  padding-inline-start: 1.2em;
+  color: var(--muted);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  list-style: disc;
+}
+
+.projects-table-highlights li::marker {
+  color: var(--green);
+}
+
+.projects-table-highlights strong {
+  display: block;
+  color: var(--text);
+  font-weight: 600;
 }
 
 .research-details-table td h2 {
@@ -2197,17 +2227,26 @@ footer .developer-credit {
 .projects-table-stack {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 14px;
+  gap: 6px;
   margin: 12px 0 0;
   padding: 0;
   list-style: none;
 }
 
+.projects-table-stack li {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .projects-table-stack .tech-mark.labeled {
   flex-direction: row;
   min-width: 0;
+  max-width: 100%;
   gap: 6px;
-  padding: 0;
+  padding: 4px 7px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
 }
 
 .projects-table-stack .tech-mark :is(img, svg) {
@@ -2245,6 +2284,72 @@ footer .developer-credit {
   aspect-ratio: 16 / 9;
   object-fit: contain;
   object-position: center;
+}
+
+.projects-table .image-gallery {
+  container: project-gallery / inline-size;
+}
+
+.projects-table .image-gallery-items {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+.projects-table .image-gallery-items > img {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel);
+}
+
+@container project-gallery (min-width: 22rem) {
+  .projects-table .image-gallery-items {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container project-gallery (min-width: 36rem) {
+  .projects-table .image-gallery-items:has(> img:nth-child(3)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@container projects-page (max-width: 42rem) {
+  .projects-table,
+  .projects-table :is(thead, tr, th, td) {
+    display: block;
+    width: auto;
+  }
+
+  .projects-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .projects-table tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  .projects-table tbody tr {
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .projects-table tbody :is(th, td) {
+    padding: 12px;
+    border: 0;
+  }
+
+  .projects-table th[scope="row"] {
+    border-bottom: 1px solid var(--border);
+    border-radius: 7px 7px 0 0;
+  }
 }
 
 /* +N more / Show less */

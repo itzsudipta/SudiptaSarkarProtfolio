@@ -138,7 +138,7 @@ export function WorkspaceDialog({
         ) : (
           <>
             <div className="comment">{project.kind}</div>
-            <p>{project.detail}</p>
+            <p>{project.detail || project.description}</p>
             <div className="project-tech">
               {project.tags.map((t) => (
                 <TechIcon key={t} name={t} />
